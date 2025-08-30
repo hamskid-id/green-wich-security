@@ -1,0 +1,64 @@
+/* src/pages/CreateVisitorCodePage.css */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.page-description {
+  margin-bottom: 24px;
+}
+
+.page-description p {
+  margin: 0;
+  color: #606060;
+  font-weight: 400px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.generated-code {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.generated-code h3 {
+  margin: 0 0 12px 0;
+  color: var(--ion-color-dark);
+}
+
+.code-display {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: var(--ion-color-primary);
+  margin: 16px 0;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed var(--ion-color-primary);
+}
+
+.generated-code p {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+}
+
+.create-header-title {
+  font-size: 18px !important;
+  font-weight: 600;
+  margin: 0;
+  color: #004225 !important;
+  line-height: 28px;
+}
+
+.app-header {
+  --background: #ffffff;
+  position: relative;
+  z-index: 10;
+   box-shadow:none !important;
+   border-bottom: 1px solid #E5E7EB;
+   min-height: 49px;
+}

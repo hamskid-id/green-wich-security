@@ -1,0 +1,73 @@
+ion-button.custom-button {
+  --border-radius: 12px !important;
+  border-radius: 12px !important;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  margin: 16px 0;
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: none;
+  overflow: hidden;
+  min-height: 46px; /* Add explicit height - adjust based on your design */
+  height: auto;
+}
+
+ion-button.custom-button .button-native {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit; /* Inherit the min-height from parent */
+}
+
+ion-button.custom-button .button-inner {
+  border-radius: 12px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px; /* Ensure inner content has consistent height */
+}
+
+/* Spinner styling to match text height */
+ion-button.custom-button ion-spinner {
+  width: 20px;
+  height: 20px;
+  --color: currentColor;
+}
+
+/* Target all possible elements that might have border-radius */
+ion-button.custom-button,
+ion-button.custom-button .button-native,
+ion-button.custom-button .button-inner,
+ion-button.custom-button::before,
+ion-button.custom-button::after {
+  border-radius: 12px !important; /* Fixed - was inconsistent with top declaration */
+}
+
+/* Background color styles - more specific selectors */
+ion-button.custom-button-primary {
+  --background: #004225 !important;
+  --background-activated: #004225 !important;
+  --color: white !important;
+}
+
+ion-button.custom-button-secondary {
+  --background: transparent !important;
+  --color: #004225 !important;
+  --border-color: #004225 !important;
+  --border-width: 1px !important;
+  --border-style: solid !important;
+}
+
+/* Loading state - ensure no height change */
+ion-button.custom-button[disabled] {
+  --background: #004225 !important; /* Keep same background when loading */
+  opacity: 0.7;
+}
+
+ion-button.custom-button-secondary[disabled] {
+  --color: #004225 !important;
+  --border-color: #004225 !important;
+  opacity: 0.7;
+}

@@ -1,0 +1,197 @@
+/* CodeGeneratedSuccessPage.css */
+
+.success-header-title {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.success-container {
+  padding: 20px 0;
+  max-width: 100%;
+}
+
+.success-icon-container {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.success-icon {
+  font-size: 80px;
+  color: #004225;
+}
+
+.success-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.success-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 32px 0;
+}
+
+.visitor-code-display {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 32px;
+  border: 2px dashed #2dd36f;
+}
+
+.code-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.visitor-code {
+  font-size: 32px;
+  font-weight: 800;
+  color: #004225;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  font-family: "Courier New", monospace;
+}
+
+.copy-button {
+  --color: #606060;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.copy-button ion-icon {
+  font-size: 16px;
+}
+
+.visit-summary {
+  margin-bottom: 24px;
+}
+
+.summary-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #004225;
+  margin: 0 0 16px 0;
+}
+
+.summary-item {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+}
+
+.summary-icon {
+  color: #666;
+  font-size: 20px;
+  margin-right: 16px;
+}
+
+.summary-item ion-label {
+  display: flex !important;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.summary-item ion-label h4 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.summary-item ion-label p {
+  font-size: 14px;
+  color: #004225;
+  margin: 0;
+}
+
+.action-buttons {
+  margin-top: 20px;
+}
+
+.share-button,
+.done-button {
+  width: 100%;
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 16px;
+}
+ion-button.share-button {
+  width: 100%;
+  --border-radius: 12px;
+  border: 1px solid #004225;
+  height: 48px;
+  font-weight: 600;
+  font-size: 16px;
+  --background: white !important;
+  --background-activated: white !important;
+  --color: #004225 !important;
+}
+
+.share-button ion-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+/* Animation for success icon */
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.success-icon-container {
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .visitor-code {
+    font-size: 28px;
+  }
+
+  .success-title {
+    font-size: 22px;
+  }
+
+  .visitor-code-display {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 320px) {
+  .visitor-code {
+    font-size: 24px;
+  }
+
+  .success-title {
+    font-size: 20px;
+  }
+
+  .summary-item ion-label h4 {
+    font-size: 13px;
+  }
+
+  .summary-item ion-label p {
+    font-size: 13px;
+  }
+}

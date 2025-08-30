@@ -1,0 +1,408 @@
+/* src/components/AlertModal.css */
+
+/* Modal Styles */
+.alert-modal {
+  --backdrop-opacity: 0.5;
+  --width: 100%;
+  --height: 100%;
+}
+
+.alert-modal ion-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop {
+  background-color: #00000080;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 24px 24px;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Alert Icon */
+.alert-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.alert-icon-bg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.alert-icon {
+  font-size: 32px;
+}
+
+/* Modal Content */
+.modal-content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.modal-message {
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.5;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Action Buttons */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirm-button,
+.cancel-button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Confirm Button - Dynamic colors */
+.confirm-button {
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: var(--hover-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Cancel Button (Light Green) */
+.cancel-button {
+  background-color: #A7F3D0;
+  color: #065F46;
+}
+
+.cancel-button:hover {
+  background-color: #86EFAC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(167, 243, 208, 0.4);
+}
+
+.cancel-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(167, 243, 208, 0.4);
+}
+
+.button-icon {
+  font-size: 16px;
+}
+
+/* Type-specific styles */
+.alert-modal-danger .confirm-button {
+  background-color: #EF4444;
+}
+
+.alert-modal-warning .confirm-button {
+  background-color: #F59E0B;
+}
+
+.alert-modal-success .confirm-button {
+  background-color: #10B981;
+}
+
+.alert-modal-info .confirm-button {
+  background-color: #3B82F6;
+}
+
+/* Mobile specific styles */
+@media (max-width: 480px) {
+  .modal-container {
+    margin: 0 12px;
+    padding: 28px 20px 20px;
+  }
+  
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .modal-message {
+    font-size: 13px;
+  }
+  
+  .confirm-button,
+  .cancel-button {
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* Haptic feedback for mobile */
+.confirm-button:active,
+.cancel-button:active {
+  transform: scale(0.98);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .modal-container {
+    animation: none;
+  }
+  
+  .confirm-button:hover,
+  .cancel-button:hover {
+    transform: none;
+  }
+}/* src/components/RevokeCodeModal.css */
+
+/* Modal Styles */
+.revoke-modal {
+  --backdrop-opacity: 0.5;
+  --width: 100%;
+  --height: 100%;
+}
+
+.revoke-modal ion-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 24px 24px;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Warning Icon */
+.warning-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.warning-icon-bg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #FEF2F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.warning-icon {
+  font-size: 32px;
+  color: #EF4444;
+}
+
+/* Modal Content */
+.modal-content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.modal-message {
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.5;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Action Buttons */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirm-button,
+.cancel-button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Confirm Button (Red) */
+.confirm-button {
+  background-color: #EF4444;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #DC2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.confirm-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4);
+}
+
+/* Cancel Button (Light Green) */
+.cancel-button {
+  background-color: #A7F3D0;
+  color: #065F46;
+}
+
+.cancel-button:hover {
+  background-color: #86EFAC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(167, 243, 208, 0.4);
+}
+
+.cancel-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(167, 243, 208, 0.4);
+}
+
+.button-icon {
+  font-size: 16px;
+}
+
+/* Mobile specific styles */
+@media (max-width: 480px) {
+  .modal-container {
+    margin: 0 12px;
+    padding: 28px 20px 20px;
+  }
+  
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .modal-message {
+    font-size: 13px;
+  }
+  
+  .confirm-button,
+  .cancel-button {
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* Haptic feedback for mobile */
+.confirm-button:active,
+.cancel-button:active {
+  transform: scale(0.98);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .modal-container {
+    animation: none;
+  }
+  
+  .confirm-button:hover,
+  .cancel-button:hover {
+    transform: none;
+  }
+}

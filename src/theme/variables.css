@@ -1,0 +1,80 @@
+/* For information on how to create your own theme, please see:
+http://ionicframework.com/docs/theming/ */
+
+ion-tab-button.tab-selected {
+  color: #004225 !important;
+}
+
+/* Sonner-style toast customizations */
+ion-toast {
+  --border-radius: 8px;
+  --max-width: 356px;
+  --min-height: 48px;
+  --font-size: 14px;
+  --font-weight: 400;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+/* Success toast (Sonner style) */
+ion-toast.toast-success {
+  --color: #047857;
+  --background: #f0fdf4;
+  --border: 1px solid #047857;
+}
+
+/* Error/Danger toast (Sonner style) */
+ion-toast.toast-danger {
+  --color: #dc2626;
+  --background: #fef2f2;
+  --border: 1px solid #dc2626;
+}
+
+/* Warning toast (Sonner style) */
+ion-toast.toast-warning {
+  --color: #d97706;
+  --background: #fffbeb;
+  --border: 1px solid #fed7aa;
+}
+
+/* Info toast (Sonner style) */
+ion-toast.toast-info {
+  --color: #2563eb;
+  --background: #eff6ff;
+  --border: 1px solid #bfdbfe;
+}
+
+/* Override Ionic's default color classes */
+ion-toast.toast-danger {
+  --color: #dc2626 !important;
+  --background: #fef2f2 !important;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  ion-toast.toast-success {
+    --color: #10b981;
+    --background: #064e3b;
+    --border: 1px solid #065f46;
+  }
+
+  ion-toast.toast-danger {
+    --color: #f87171;
+    --background: #7f1d1d;
+    --border: 1px solid #991b1b;
+  }
+
+  ion-toast.toast-warning {
+    --color: #fbbf24;
+    --background: #78350f;
+    --border: 1px solid #92400e;
+  }
+
+  ion-toast.toast-info {
+    --color: #60a5fa;
+    --background: #1e3a8a;
+    --border: 1px solid #1e40af;
+  }
+}

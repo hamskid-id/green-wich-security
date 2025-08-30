@@ -1,0 +1,458 @@
+/* AuthPages.css */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.auth-content {
+  --background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px 0px;
+  margin: 0 auto;
+}
+
+/* Logo Section */
+.logo-section {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.logo-circle {
+  width: 64px;
+  height: 64px;
+  background: #2d5831;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 2px 8px rgba(45, 88, 49, 0.2);
+}
+
+.logo-circle ion-icon {
+  color: white;
+  font-size: 28px;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d5831;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Auth Tabs */
+.auth-tabs {
+  display: flex;
+  background: #f5f5f5;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.auth-tab.active {
+  background: white;
+  color: #2d5831;
+border-bottom: 2px solid #2d5831;
+}
+
+.auth-tab:hover:not(.active) {
+  background: #eee;
+}
+
+/* Auth Form */
+.auth-form {
+  margin-bottom: 24px;
+   padding-right: 24px;
+  padding-left: 24px;
+}
+
+.auth-form,.password-section {
+  margin-bottom: 20px;
+}
+
+.forgot-password {
+  text-align: right;
+  margin: 8px 0 24px 0;
+}
+
+.forgot-password ion-text {
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.forgot-password ion-text:hover {
+  text-decoration: underline;
+}
+
+.support-link {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.support-link ion-text {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.support-link ion-text:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.auth-footer {
+  text-align: center;
+  padding-top: 24px;
+   padding-right: 24px;
+  padding-left: 24px;
+  border-top: 1px solid #eee;
+}
+
+.copyright {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.password-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.password-label {
+  font-size: 14px;
+  font-weight: 500;
+  color:#636469 !important;
+}
+
+.forgot-password-link {
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #606060;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+/* Remove margin from password input container */
+.password-section .custom-input-container {
+  margin-bottom: 0;
+}
+
+/* Hide the label from the CustomInput for password field */
+.password-section .custom-input-container .input-label {
+  display: none;
+}
+
+/* Additional styles for VerifyEmailPage.tsx - Add to AuthPages.css */
+
+.back-button-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.back-button {
+  --color: #666;
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  font-size: 24px;
+}
+
+.verification-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #004225, #2dd36f);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+.verification-icon {
+  font-size: 40px;
+  color: white;
+}
+
+.verification-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin: 0 0 16px 0;
+}
+
+.verification-subtitle {
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0 0 32px 0;
+  padding: 0 20px;
+}
+
+.verification-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.verification-code-section {
+  margin-bottom: 24px;
+}
+
+.code-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.code-inputs-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+.code-input-wrapper {
+  flex: 1;
+}
+
+.code-input {
+  --background: #f8f9fa;
+  --border-color: #e0e0e0;
+  --border-radius: 12px;
+  --padding-start: 0;
+  --padding-end: 0;
+  --color: #333;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  height: 56px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.code-input:focus-within {
+  --border-color: #004225;
+  border-color: #004225;
+  box-shadow: 0 0 0 3px rgba(0, 66, 37, 0.1);
+}
+
+.code-input.has-value {
+  --border-color: #004225;
+  --background: #ffffff;
+  border-color: #004225;
+}
+
+.verify-button {
+  margin: 24px 0;
+}
+
+.resend-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.resend-text {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.resend-button {
+  --color: #004225;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.resend-button:disabled {
+  --color: #999;
+  opacity: 0.6;
+}
+
+/* Animation for verification icon */
+@keyframes verificationPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.verification-icon-container {
+  animation: verificationPulse 2s ease-in-out infinite;
+}
+
+/* Success state for code inputs */
+.code-input.success {
+  --border-color: #2dd36f;
+  border-color: #2dd36f;
+  --background: #f0fdf4;
+}
+
+/* Error state for code inputs */
+.code-input.error {
+  --border-color: #eb445a;
+  border-color: #eb445a;
+  --background: #fef2f2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .verification-subtitle {
+    font-size: 14px;
+    padding: 0 16px;
+  }
+  
+  .code-inputs-container {
+    gap: 8px;
+    max-width: 200px;
+  }
+  
+  .code-input {
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  .verification-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 320px) {
+  .verification-icon-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .verification-icon {
+    font-size: 35px;
+  }
+  
+  .code-inputs-container {
+    gap: 6px;
+    max-width: 180px;
+  }
+  
+  .code-input {
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-content {
+    padding: 16px;
+  }
+  
+  .app-title {
+    font-size: 18px;
+  }
+  
+  .logo-circle {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .logo-circle ion-icon {
+    font-size: 24px;
+  }
+}
+
+/* Custom Input Overrides for Auth Pages */
+.auth-form .custom-input-container .input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.auth-form .custom-input-item {
+  --background: #f8f9fa;
+  --border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  margin-bottom: 4px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.auth-form .custom-input-item:focus-within {
+  --background: white;
+  border-color: #2d5831;
+  box-shadow: 0 0 0 2px rgba(45, 88, 49, 0.1);
+}
+
+.auth-form .input-icon {
+  color: #666;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.auth-form .custom-input,
+.auth-form .custom-textarea {
+  --color: #333;
+  --placeholder-color: #999;
+  --padding-start: 0;
+  font-size: 14px;
+}
+
+/* Loading and Disabled States */
+.auth-form ion-button[disabled] {
+  opacity: 0.6;
+}
+
+
+.instruction-text{
+  text-align: center !important;
+  margin-bottom: 30px;
+}
