@@ -13,6 +13,10 @@
 }
 
 .auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   max-width: 400px;
   background: white;
