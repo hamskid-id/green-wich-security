@@ -24,23 +24,27 @@ import {
 import CustomButton from "../../components/ui/customButton/CustomButton";
 import "./CodeGeneratedSuccessPage.css";
 import { useLocation, useHistory } from "react-router";
-import { CodeData } from "../../types";
+import { AccessCode, CodeData } from "../../types";
 import {
   formatDate,
   formatTimeDisplay,
   formatTimeRemaining,
 } from "../../utils/helpers";
-
+import ShareModal from "../../components/ui/shareAccessCodeModal.tsx/ShareAccessCodeModal";
 interface LocationState {
-  codeData: CodeData;
+  codeData: AccessCode;
 }
 
 const CodeGeneratedSuccessPage: React.FC = () => {
   const location = useLocation<LocationState>();
   const history = useHistory();
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
+  const [shareCode, setShareCode] = useState<AccessCode | null>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const codeData = location.state?.codeData;
 
@@ -118,21 +122,18 @@ const CodeGeneratedSuccessPage: React.FC = () => {
   };
 
   const handleShareCode = (): void => {
-    const shareText = `Your visitor access code is: ${
-      codeData.code
-    }\nValid until: ${formatDate(
-      new Date(codeData.expires_in).toISOString()
-    )}\nGenerated for: ${codeData.visitor_name}`;
+    setShareCode(codeData);
+    setIsShareModalOpen(true);
+  };
 
-    if (navigator.share) {
-      navigator.share({
-        title: "Visitor Access Code",
-        text: shareText,
-      });
-    } else {
-      // Fallback - copy to clipboard
-      handleCopyCode();
-    }
+  const handleShareModalClose = () => {
+    setShareCode(null);
+    setIsShareModalOpen(false);
+  };
+
+  const handleToast = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
   };
 
   const handleDone = (): void => {
@@ -256,12 +257,30 @@ const CodeGeneratedSuccessPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Copy Toast */}
         <IonToast
           isOpen={showCopyToast}
           onDidDismiss={() => setShowCopyToast(false)}
           message="Code copied to clipboard!"
           duration={2000}
           cssClass="toast-success"
+        />
+
+        {/* Share Toast */}
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={2000}
+          cssClass="toast-success"
+        />
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={handleShareModalClose}
+          accessCode={shareCode}
+          onToast={handleToast}
         />
       </IonContent>
     </IonPage>

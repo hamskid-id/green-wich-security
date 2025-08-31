@@ -1,0 +1,317 @@
+/* ShareModal.css */
+
+.share-modal-content {
+  padding: 20px 0;
+  max-width: 100%;
+}
+
+.share-preview-card {
+  margin-bottom: 24px;
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 32px;
+  border: 2px dashed #2dd36f;
+}
+
+.share-preview-card .code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  
+}
+
+.share-preview-card .code-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #004225;
+  margin: 0;
+}
+
+.share-preview-card .status-badge {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.share-preview-card .created-code-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.share-preview-card .created-code-row ion-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.share-preview-card .created-code-row ion-label strong {
+  color: #004225;
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
+}
+
+.share-preview-card .expires-info {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.share-preview-card .expires-info ion-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Share Options List */
+.share-options-list {
+  margin-top: 16px;
+}
+
+.share-option-item {
+  --background: transparent;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 16px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.share-option-item:hover {
+  --background: #f8f9fa;
+}
+
+.share-option-item ion-icon {
+  color: #004225;
+  font-size: 24px;
+  margin-right: 16px;
+}
+
+.share-option-item ion-label h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.share-option-item ion-label p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* QR Code View */
+.qr-code-view {
+  padding: 0;
+}
+
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.qr-code-container img {
+  max-width: 280px;
+  height: auto;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-info-card {
+  margin-bottom: 24px;
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 32px;
+  border: 2px dashed #2dd36f;
+}
+
+.qr-card{
+  height: auto;
+  border-radius: 16px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow:none;
+}
+
+.qr-info-card .ion-text-center{
+    box-shadow: none !important;
+}
+
+.qr-info-card .ion-text-center h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #004225;
+  margin: 0 0 8px 0;
+}
+
+.qr-info-card .ion-text-center p {
+  font-size: 16px;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.qr-info-card .ion-text-center p strong {
+  color: #004225;
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
+  font-size: 18px;
+}
+
+.qr-info-card .ion-text-center .status-badge {
+  margin: 12px 0;
+}
+
+.qr-info-card .ion-text-center .expires-info {
+  margin-top: 12px;
+}
+
+.qr-info-card .expires-info p {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+}
+
+.qr-scan-instruction {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.qr-scan-instruction p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-style: italic;
+}
+
+/* QR Actions */
+.qr-actions {
+  margin-top: 24px;
+}
+
+.qr-actions ion-button {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.qr-actions ion-button ion-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+/* Loading State */
+.qr-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.qr-loading ion-spinner {
+  margin-bottom: 16px;
+}
+
+.qr-loading p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* Animation for QR code appearance */
+@keyframes qrFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.qr-code-container img {
+  animation: qrFadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .qr-code-container img {
+    max-width: 240px;
+    padding: 16px;
+  }
+
+  .qr-info-card .ion-text-center h2 {
+    font-size: 18px;
+  }
+
+  .qr-info-card .ion-text-center p strong {
+    font-size: 16px;
+  }
+
+  .share-option-item ion-label h2 {
+    font-size: 15px;
+  }
+
+  .share-option-item ion-label p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 320px) {
+  .qr-code-container img {
+    max-width: 200px;
+    padding: 12px;
+  }
+
+  .qr-info-card .ion-text-center h2 {
+    font-size: 16px;
+  }
+
+  .share-option-item ion-label h2 {
+    font-size: 14px;
+  }
+
+  .share-option-item ion-label p {
+    font-size: 12px;
+  }
+
+  .qr-actions ion-button {
+    height: 44px;
+    font-size: 15px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .qr-code-container img {
+    animation: none;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .qr-code-container img {
+    border-color: #404040;
+    background-color: #ffffff; /* Keep QR background white for scanning */
+  }
+
+  .share-option-item {
+    border-color: #404040;
+  }
+
+  .share-option-item:hover {
+    --background: #1a1a1a;
+  }
+}

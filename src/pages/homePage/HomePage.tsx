@@ -22,11 +22,6 @@ import {
   IonCol,
 } from "@ionic/react";
 import {
-  person,
-  time,
-  qrCode,
-  documentText,
-  analytics,
   notificationsOutline,
   chevronForward,
 } from "ionicons/icons";

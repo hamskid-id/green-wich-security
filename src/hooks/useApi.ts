@@ -196,6 +196,20 @@ export const useApi = () => {
     });
   };
 
+  const useDynamicDelete = <TData>() => {
+    return useMutation<TData, ApiError, string>({
+      // Accept URL string as parameter
+      mutationFn: async (url: string) => {
+        const response = await apiClient.delete<TData>(url);
+        return response.data;
+      },
+      onSuccess: (_, url) => {
+        const resource = url.split("/")[1];
+        queryClient.invalidateQueries({ queryKey: [resource] });
+      },
+    });
+  };
+
   return {
     useGet,
     useGetPaginated,
@@ -204,5 +218,6 @@ export const useApi = () => {
     usePut,
     usePatch,
     useDelete,
+    useDynamicDelete,
   };
 };

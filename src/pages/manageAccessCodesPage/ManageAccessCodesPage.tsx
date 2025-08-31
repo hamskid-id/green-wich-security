@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
-  IonCard,
-  IonCardContent,
-  IonLabel,
-  IonBadge,
   IonButton,
   IonIcon,
   IonToast,
@@ -17,27 +13,25 @@ import {
   IonInfiniteScrollContent,
   IonProgressBar,
 } from "@ionic/react";
-import {
-  arrowBack,
-  trashOutline,
-  trash,
-  close,
-  arrowRedoSharp,
-} from "ionicons/icons";
+import { arrowBack, trash, close } from "ionicons/icons";
 import "./ManageAccessCodesPage.css";
 import AlertModal from "../../components/ui/alertModal/AlertModal";
+import ShareModal from "../../components/ui/shareAccessCodeModal.tsx/ShareAccessCodeModal";
 import { useApi } from "../../hooks/useApi";
 import { AccessCode } from "../../types";
-import { formatDate, calculateRemainingTime } from "../../utils/helpers";
 import { useHistory } from "react-router";
+import FilterBar from "../../components/manageAccessCode/FilterBar";
+import EmptyState from "../../components/manageAccessCode/EmptyState";
+import CodeCard from "../../components/manageAccessCode/CodeCard";
 
 const ManageAccessCodesPage: React.FC = () => {
   const history = useHistory();
-  const { useInfinitePaginated, useDelete } = useApi();
+  const { useInfinitePaginated, useDynamicDelete } = useApi();
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedCode, setSelectedCode] = useState<AccessCode | null>(null);
+  const [shareCode, setShareCode] = useState<AccessCode | null>(null);
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
-  // Re-run query when filter changes
   const {
     data,
     fetchNextPage,
@@ -53,49 +47,60 @@ const ManageAccessCodesPage: React.FC = () => {
     { limit: 25 }
   );
 
-  const { mutate: deleteCode, isPending: isDeleting } = useDelete<void>(
-    `/access-codes/${selectedCode?.id}`
-  );
+  const { mutate: deleteCode, isPending: isDeleting } =
+    useDynamicDelete<void>();
+  const rawCodes = data?.pages.flatMap((page) => page.data.data) ?? [];
 
-  const codes = data?.pages.flatMap((page) => page.data.data) ?? [];
+  const processedCodes = useMemo(() => {
+    return rawCodes.map((code) => {
+      const createdTimestamp = new Date(code.created_at).getTime();
+      const FIXED_DURATION_MINUTES = 30;
+      const expirationTimestamp =
+        createdTimestamp + FIXED_DURATION_MINUTES * 60 * 1000;
+      const timeLeft = Math.max(0, expirationTimestamp - currentTime);
+
+      let updatedStatus = code.status;
+      if (code.status === "active" && timeLeft <= 0) {
+        updatedStatus = "expired";
+      }
+
+      return {
+        ...code,
+        status: updatedStatus,
+        remaining: {
+          value: Math.floor(timeLeft / (1000 * 60)) || 0,
+          unit: timeLeft <= 0 ? "min" : "mins",
+        },
+        expirationTimestamp,
+      };
+    });
+  }, [rawCodes, currentTime]);
+
+  const filteredCodes = useMemo(() => {
+    if (activeFilter === "all") return processedCodes;
+    return processedCodes.filter((code) => code.status === activeFilter);
+  }, [processedCodes, activeFilter]);
 
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [currentTime, setCurrentTime] = useState(Date.now()); // For triggering re-renders
 
-  // Update current time every second to refresh countdowns
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now());
-    }, 1000);
-
+    const interval = setInterval(() => setCurrentTime(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const filterOptions = [
-    { id: "all", label: "All" },
-    { id: "active", label: "Active" },
-    { id: "expired", label: "Expired" },
-    { id: "revoked", label: "Revoked" },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "success";
-      case "expired":
-        return "medium";
-      case "revoked":
-        return "danger";
-      default:
-        return "primary";
+  useEffect(() => {
+    if (activeFilter === "all") {
+      const timeoutId = setTimeout(() => refetch(), 100);
+      return () => clearTimeout(timeoutId);
     }
-  };
+  }, [activeFilter, refetch]);
 
   const handleShare = (code: AccessCode) => {
-    setToastMessage(`Shared code for ${code.visitor_name}`);
-    setShowToast(true);
+    setShareCode(code);
+    setIsShareModalOpen(true);
   };
 
   const handleDelete = (code: AccessCode) => {
@@ -105,10 +110,11 @@ const ManageAccessCodesPage: React.FC = () => {
 
   const handleRevokeConfirm = () => {
     if (selectedCode) {
-      deleteCode(undefined, {
+      deleteCode(`/access-codes/${selectedCode.id}`, {
         onSuccess: () => {
           setToastMessage(`Code revoked for ${selectedCode.visitor_name}`);
           setShowToast(true);
+          refetch();
         },
         onError: (error) => {
           setToastMessage(`Failed to revoke code: ${error.message}`);
@@ -122,133 +128,62 @@ const ManageAccessCodesPage: React.FC = () => {
     }
   };
 
-  const handleAlertClose = () => {
-    setSelectedCode(null);
-    setIsAlertModalOpen(false);
-  };
-
   return (
     <IonPage>
       <IonHeader className="app-header">
         <IonToolbar>
-          <IonButton slot="start" fill="clear" routerLink="/home">
+          <IonButton
+            slot="start"
+            fill="clear"
+            routerLink="/home"
+            aria-label="Go back to Home"
+          >
             <IonIcon icon={arrowBack} />
           </IonButton>
           <div className="header-side-content">
             <IonTitle className="header-title">Manage Access Codes</IonTitle>
-            <div
+            <button
               className="access-action-icon"
+              aria-label="Create visitor code"
               onClick={() => history.push("/create-visitor-code")}
             >
-              <img src="/button.svg" alt="Logo" className="logo-image" />
-            </div>
+              <img src="/button.svg" alt="Create code" className="logo-image" />
+            </button>
           </div>
         </IonToolbar>
         {isLoading && <IonProgressBar type="indeterminate" color="primary" />}
       </IonHeader>
 
       <IonContent className="ion-padding">
-        {/* Filters */}
-        <div className="filter-swiper">
-          <div className="filter-scroll-container">
-            {filterOptions.map((filter) => (
-              <button
-                key={filter.id}
-                className={`filter-button ${
-                  activeFilter === filter.id ? "filter-button-active" : ""
-                }`}
-                onClick={() => setActiveFilter(filter.id)}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <FilterBar
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+        />
 
-        {/* Error */}
         {isError && (
-          <p className="ion-text-center text-red-500">
+          <p className="ion-text-center text-red-500" role="alert">
             {error?.message || "Failed to fetch access codes"}
           </p>
         )}
 
-        {/* List */}
         <div className="codes-list">
-          {codes.map((code) => {
-            const remaining =
-              code.status === "active"
-                ? calculateRemainingTime(code.created_at, code.expires_in)
-                : { value: 0, unit: "min" };
-
-            // Check if the code has expired (remaining time is 0 or less)
-            const hasExpired = remaining.value <= 0;
-
-            return (
-              <IonCard key={code.id} className="code-card">
-                <IonCardContent>
-                  <div className="code-header">
-                    <h3 className="code-name">{code.visitor_name}</h3>
-                    <div className="code-actions">
-                      <button
-                        className={`action-button share ${
-                          code.status !== "active" || hasExpired
-                            ? "disabled"
-                            : ""
-                        }`}
-                        onClick={() => handleShare(code)}
-                        disabled={code.status !== "active" || hasExpired}
-                      >
-                        <IonIcon icon={arrowRedoSharp} />
-                      </button>
-                      <button
-                        className={`action-button delete ${
-                          code.status !== "active" || hasExpired
-                            ? "disabled"
-                            : ""
-                        }`}
-                        onClick={() => handleDelete(code)}
-                        disabled={code.status !== "active" || hasExpired}
-                      >
-                        <IonIcon icon={trashOutline} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="status-row">
-                    <IonBadge
-                      color={getStatusColor(code.status)}
-                      className="status-badge"
-                    >
-                      {code.status.charAt(0).toUpperCase() +
-                        code.status.slice(1)}
-                    </IonBadge>
-                    <div className="expires-info">
-                      {code.status === "active" && !hasExpired && (
-                        <IonLabel>
-                          Expires in {remaining.value} {remaining.unit}
-                        </IonLabel>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="created-code-row">
-                    <IonLabel>{formatDate(code.created_at)}</IonLabel>
-                    <IonLabel>
-                      <strong>Code: {code.code}</strong>
-                    </IonLabel>
-                  </div>
-                </IonCardContent>
-              </IonCard>
-            );
-          })}
+          {filteredCodes.map((code) => (
+            <CodeCard
+              key={code.id}
+              code={code}
+              onShare={handleShare}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
 
-        {/* Infinite Scroll */}
+        {filteredCodes.length === 0 && !isLoading && (
+          <EmptyState filter={activeFilter} />
+        )}
+
         <IonInfiniteScroll
           onIonInfinite={async (ev) => {
-            if (hasNextPage) {
-              await fetchNextPage();
-            }
+            if (hasNextPage) await fetchNextPage();
             (ev.target as HTMLIonInfiniteScrollElement).complete();
           }}
           disabled={!hasNextPage}
@@ -257,15 +192,14 @@ const ManageAccessCodesPage: React.FC = () => {
         </IonInfiniteScroll>
 
         {isFetchingNextPage && (
-          <div className="ion-text-center">
+          <div className="ion-text-center" aria-live="polite">
             <IonSpinner name="crescent" />
           </div>
         )}
 
-        {/* Alert Modal */}
         <AlertModal
           isOpen={isAlertModalOpen}
-          onClose={handleAlertClose}
+          onClose={() => setIsAlertModalOpen(false)}
           onConfirm={handleRevokeConfirm}
           title="Revoke Code"
           message="Are you sure you want to revoke this code? This action cannot be undone."
@@ -276,7 +210,13 @@ const ManageAccessCodesPage: React.FC = () => {
           cancelIcon={close}
         />
 
-        {/* Toast */}
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          accessCode={shareCode}
+          onToast={setToastMessage}
+        />
+
         <IonToast
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}

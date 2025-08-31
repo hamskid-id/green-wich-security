@@ -64,6 +64,10 @@ export interface AccessCode {
   status: string;
   unit: Unit;
   resident: Resident;
+  purpose?: string;
+  notes?: string;
+  start_time?: string;
+  end_time?: string;
 }
 
 export interface CodeData {
