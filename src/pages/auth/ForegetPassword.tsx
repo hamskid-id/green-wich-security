@@ -155,7 +155,7 @@ const ForgotPasswordPage: React.FC = () => {
                   type={isEmail ? "email" : "tel"}
                   value={contactInfo}
                   onIonInput={(e) => setContactInfo(e.detail.value!)}
-                  placeholder="email@example.com or +234 800 123 4567"
+                  placeholder="email@example.com "
                 />
 
                 <CustomButton

@@ -46,8 +46,8 @@ const LoginPage: React.FC = () => {
           {/* Auth Tabs */}
           <div className="auth-tabs">
             <div className="auth-tab active">Login</div>
-            <div className="auth-tab" onClick={() => history.push("/register")}>
-              Create Account
+            <div className="auth-tab">
+              
             </div>
           </div>
 
