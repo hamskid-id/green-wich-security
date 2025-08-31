@@ -77,8 +77,21 @@ const ManageAccessCodesPage: React.FC = () => {
   }, [rawCodes, currentTime]);
 
   const filteredCodes = useMemo(() => {
-    if (activeFilter === "all") return processedCodes;
-    return processedCodes.filter((code) => code.status === activeFilter);
+    let codes = processedCodes;
+    
+    if (activeFilter !== "all") {
+      codes = codes.filter((code) => code.status === activeFilter);
+    }
+    
+    // Sort codes: active codes first, then sort by creation date (newest first)
+    return codes.sort((a, b) => {
+      // Prioritize active status
+      if (a.status === "active" && b.status !== "active") return -1;
+      if (a.status !== "active" && b.status === "active") return 1;
+      
+      // For same status, sort by creation date (newest first)
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
   }, [processedCodes, activeFilter]);
 
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);

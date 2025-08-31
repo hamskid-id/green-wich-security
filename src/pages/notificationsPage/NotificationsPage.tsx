@@ -8,12 +8,11 @@ import {
   IonContent,
   IonButton,
   IonIcon,
-  IonLabel,
   IonItem,
   IonList,
   IonBadge,
 } from "@ionic/react";
-import { arrowBack, checkmarkCircle, timeOutline } from "ionicons/icons";
+import { arrowBack, timeOutline } from "ionicons/icons";
 import "./NotificationsPage.css";
 
 const NotificationsPage: React.FC = () => {

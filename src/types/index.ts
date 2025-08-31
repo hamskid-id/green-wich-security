@@ -85,3 +85,40 @@ export interface CodeData {
   start_time?: string;
   end_time?: string;
 }
+// src/types/profile.ts
+export interface Residence {
+  id: string;
+  name: string;
+}
+
+export interface Unit {
+  id: string;
+  name: string;
+  type: string;
+  number: number;
+  residence: Residence;
+}
+
+export interface ProfileData {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: string;
+  unit: Unit;
+}
+
+export interface ProfileApiResponse {
+  status: string;
+  message: string;
+  data: ProfileData;
+}
+
+export interface ProfileCardProps {
+  title: string;
+  children: React.ReactNode;
+  icon?: string;
+  className?: string;
+}

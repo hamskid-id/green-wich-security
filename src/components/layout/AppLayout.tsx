@@ -8,13 +8,19 @@ import {
   IonLabel,
 } from "@ionic/react";
 import { Route, Redirect } from "react-router-dom";
-import { home, qrCodeOutline, notificationsOutline } from "ionicons/icons";
+import {
+  home,
+  qrCodeOutline,
+  notificationsOutline,
+  person,
+} from "ionicons/icons";
 import HomePage from "../../pages/homePage/HomePage";
 import CreateVisitorCodePage from "../../pages/createVisitorCodePage/CreateVisitorCodePage";
 import ManageAccessCodesPage from "../../pages/manageAccessCodesPage/ManageAccessCodesPage";
 import NotificationsPage from "../../pages/notificationsPage/NotificationsPage";
 import HistoryLogsPage from "../../pages/historyLogsPage/HistoryLogsPage";
 import CodeGeneratedSuccessPage from "../../pages/successCodePage/CodeGeneratedSuccessPage";
+import ProfilePage from "../../pages/profilePage/ProfilePage";
 
 const MobileLayout: React.FC = () => {
   return (
@@ -40,6 +46,7 @@ const MobileLayout: React.FC = () => {
           component={ManageAccessCodesPage}
           exact
         />
+        <Route path="/profile" component={ProfilePage} exact />
 
         {/* Default redirect */}
         <Route exact path="/" render={() => <Redirect to="/home" />} />
@@ -62,6 +69,11 @@ const MobileLayout: React.FC = () => {
         <IonTabButton tab="notifications" href="/notifications">
           <IonIcon icon={notificationsOutline} />
           <IonLabel>Notifications</IonLabel>
+        </IonTabButton>
+
+        <IonTabButton tab="profile" href="/profile">
+          <IonIcon icon={person} />
+          <IonLabel>Profile</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
