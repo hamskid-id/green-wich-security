@@ -1,6 +1,7 @@
 /* AuthPages.css */
 * {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
 }
 
 .auth-content {
@@ -95,7 +96,7 @@
 .auth-tab.active {
   background: white;
   color: #2d5831;
-border-bottom: 2px solid #2d5831;
+  border-bottom: 2px solid #2d5831;
 }
 
 .auth-tab:hover:not(.active) {
@@ -105,11 +106,12 @@ border-bottom: 2px solid #2d5831;
 /* Auth Form */
 .auth-form {
   margin-bottom: 24px;
-   padding-right: 24px;
+  padding-right: 24px;
   padding-left: 24px;
 }
 
-.auth-form,.password-section {
+.auth-form,
+.password-section {
   margin-bottom: 20px;
 }
 
@@ -146,7 +148,7 @@ border-bottom: 2px solid #2d5831;
 .auth-footer {
   text-align: center;
   padding-top: 24px;
-   padding-right: 24px;
+  padding-right: 24px;
   padding-left: 24px;
   border-top: 1px solid #eee;
 }
@@ -166,7 +168,7 @@ border-bottom: 2px solid #2d5831;
 .password-label {
   font-size: 14px;
   font-weight: 500;
-  color:#636469 !important;
+  color: #636469 !important;
 }
 
 .forgot-password-link {
@@ -327,8 +329,13 @@ border-bottom: 2px solid #2d5831;
 
 /* Animation for verification icon */
 @keyframes verificationPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .verification-icon-container {
@@ -355,17 +362,17 @@ border-bottom: 2px solid #2d5831;
     font-size: 14px;
     padding: 0 16px;
   }
-  
+
   .code-inputs-container {
     gap: 8px;
     max-width: 200px;
   }
-  
+
   .code-input {
     height: 48px;
     font-size: 20px;
   }
-  
+
   .verification-title {
     font-size: 24px;
   }
@@ -376,16 +383,16 @@ border-bottom: 2px solid #2d5831;
     width: 70px;
     height: 70px;
   }
-  
+
   .verification-icon {
     font-size: 35px;
   }
-  
+
   .code-inputs-container {
     gap: 6px;
     max-width: 180px;
   }
-  
+
   .code-input {
     height: 44px;
     font-size: 18px;
@@ -397,16 +404,16 @@ border-bottom: 2px solid #2d5831;
   .auth-content {
     padding: 16px;
   }
-  
+
   .app-title {
     font-size: 18px;
   }
-  
+
   .logo-circle {
     width: 56px;
     height: 56px;
   }
-  
+
   .logo-circle ion-icon {
     font-size: 24px;
   }
@@ -455,8 +462,51 @@ border-bottom: 2px solid #2d5831;
   opacity: 0.6;
 }
 
-
-.instruction-text{
+.instruction-text {
   text-align: center !important;
   margin-bottom: 30px;
+}
+.title-section p {
+  font-size: 14px;
+  font-weight: 400;
+  color: #606060;
+}
+
+.title-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.heads-up {
+  background-color: #E0E0E033;
+  border-radius: 8px;
+  padding: 16px;
+  gap:10px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 33px;
+}
+
+.heads-up .warning-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap:7px;
+}
+
+.heads-up .warning-row img {
+  width: 13.99px;
+  height: 13.99px;
+}
+
+.heads-up .warning-text {
+  font-size: 12px;
+  font-weight: 400;
+  color: #606060;
+}
+
+.heads-up .warning-text-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #606060;
 }

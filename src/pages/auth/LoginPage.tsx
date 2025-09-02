@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (): Promise<void> => {
     try {
       await login({ email: email, password: password });
-      history.push("/home");
+      history.push("/verify-acess-codes");
     } catch (error: any) {
       setToastMessage(error.message || "Login failed");
       setShowToast(true);
@@ -40,19 +40,15 @@ const LoginPage: React.FC = () => {
               />
             </div>
             <h1 className="app-title">Greenwich Garden Estates</h1>
-            <p className="app-subtitle">Resident Access Portal</p>
-          </div>
-
-          {/* Auth Tabs */}
-          <div className="auth-tabs">
-            <div className="auth-tab active">Login</div>
-            <div className="auth-tab">
-              
-            </div>
+            <p className="app-subtitle">Security Access Portal</p>
           </div>
 
           {/* Login Form */}
           <div className="auth-form">
+            <div className="title-section">
+              <h2 className="page-title">Security Login</h2>
+              <p>Enter your credentials to access the guard portal</p>
+            </div>
             <CustomInput
               icon={call}
               label="Email"
@@ -92,6 +88,48 @@ const LoginPage: React.FC = () => {
 
             <div className="support-link">
               <IonText color="medium">Need help? Contact support</IonText>
+            </div>
+            <div className="heads-up">
+              <div className="warning-row">
+                <img
+                  src="/security-reminder.png"
+                  alt="Greenwich Garden Estates Logo"
+                  className="security-image"
+                />
+                <IonText color="medium" className="warning-text-title">
+                  Security Reminder:
+                </IonText>
+              </div>
+              <div className="warning-row">
+                <img
+                  src="/check.png"
+                  alt="Greenwich Garden Estates Logo"
+                  className="logo-image"
+                />
+                <IonText color="medium" className="warning-text">
+                  Never share your login credentials with anyone
+                </IonText>
+              </div>
+              <div className="warning-row">
+                <img
+                  src="/check.png"
+                  alt="Greenwich Garden Estates Logo"
+                  className="logo-image"
+                />
+                <IonText color="medium" className="warning-text">
+                  Log out when leaving your post
+                </IonText>
+              </div>
+              <div className="warning-row">
+                <img
+                  src="/check.png"
+                  alt="Greenwich Garden Estates Logo"
+                  className="logo-image"
+                />
+                <IonText color="medium" className="warning-text">
+                  Report suspicious activities to management
+                </IonText>
+              </div>
             </div>
           </div>
 

@@ -6,7 +6,6 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonMenuButton,
   IonButtons,
   IonCard,
   IonCardHeader,
@@ -26,12 +25,10 @@ import {
   chevronForward,
 } from "ionicons/icons";
 import "./HomePage.css";
-import { useResponsive } from "../../hooks/useResponsive";
-import { useHistory } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 
 const HomePage: React.FC = () => {
-  const { isDesktop } = useResponsive();
-  const history = useHistory();
+  const { user } = useAuth();
 
   return (
     <IonPage>
@@ -57,7 +54,7 @@ const HomePage: React.FC = () => {
 
       <IonContent className="ion-padding">
         <div className="welcome-section">
-          <h1>Welcome, Sarah</h1>
+          <h1>Welcome, {user?.first_name}</h1>
           <p>What would you like to do today?</p>
         </div>
 

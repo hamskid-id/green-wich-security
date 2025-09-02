@@ -1,0 +1,290 @@
+.verify-app-header {
+  --background: #ffffff;
+  position: relative;
+  z-index: 10;
+  box-shadow: none !important;
+  border-bottom: 1px solid #e5e7eb;
+  min-height: 49px;
+  padding: 0px 14px;
+}
+
+.verify-app-header ion-toolbar {
+  --background: #ffffff;
+  --border-width: 0;
+}
+
+.button-native {
+  width: 20px !important;
+}
+
+.verify-app-header ion-title {
+  padding-inline-end: 0px !important;
+  padding-inline-start: 0px !important;
+}
+
+.verify-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 32px 0px;
+  margin: 0 auto;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d5831;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Auth Form */
+.verify-form {
+  margin-bottom: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+/* OR Separator Styles */
+.or-separator {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.or-separator::before,
+.or-separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.or-separator::before {
+  margin-right: 16px;
+}
+
+.or-separator::after {
+  margin-left: 16px;
+}
+
+.or-text {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.share-button {
+  --background: #f8f9fa;
+  --color: #2d5831;
+  --border-color: #e0e0e0;
+  border: 1px solid #e0e0e0;
+}
+
+.share-button:hover {
+  --background: #e9ecef;
+}
+
+/* Header Styles */
+.app-header {
+  --background: white;
+  --border-color: #e0e0e0;
+}
+
+.guard-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.header-side-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 48px; /* Offset for the back button */
+}
+
+.verify-page-header-title {
+  font-size: 18px !important;
+  font-weight: 600;
+  margin: 0;
+  color: #004225 !important;
+  line-height: 28px;
+  padding-inline-end: 0px !important;
+  padding-inline-start: 0px !important;
+}
+
+/* Toast Styles */
+.toast-danger {
+  --background: #eb445a;
+  --color: white;
+}
+
+/* Custom Input Overrides for Auth Pages */
+.verify-form .custom-input-container .input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.verify-form .custom-input-item {
+  --background: #f8f9fa;
+  --border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  margin-bottom: 4px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.verify-form .custom-input-item:focus-within {
+  --background: white;
+  border-color: #2d5831;
+  box-shadow: 0 0 0 2px rgba(45, 88, 49, 0.1);
+}
+
+.verify-form .input-icon {
+  color: #666;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.verify-form .custom-input,
+.verify-form .custom-textarea {
+  --color: #333;
+  --placeholder-color: #999;
+  --padding-start: 0;
+  font-size: 14px;
+}
+
+/* Loading and Disabled States */
+.verify-form ion-button[disabled] {
+  opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .verify-content {
+    padding: 16px;
+  }
+
+  .app-title {
+    font-size: 18px;
+  }
+
+  .logo-circle {
+    width: 56px;
+    height: 56px;
+  }
+
+  .header-side-content {
+    margin-right: 40px;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+}
+
+/* QR Scanner Styles */
+.qr-scanner-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.camera-view {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.scanner-frame {
+  width: 250px;
+  height: 250px;
+  border: 2px solid #2dd36f;
+  border-radius: 12px;
+  position: relative;
+  background: transparent;
+}
+
+.scanner-frame::before,
+.scanner-frame::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #2dd36f;
+}
+
+.scanner-frame::before {
+  top: -3px;
+  left: -3px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.scanner-frame::after {
+  bottom: -3px;
+  right: -3px;
+  border-left: none;
+  border-top: none;
+}
+
+.scanner-instructions {
+  padding: 20px;
+  text-align: center;
+  background: white;
+}
+
+.scanner-instructions p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.scanner-instructions p:first-child {
+  font-weight: 600;
+  color: #333;
+}

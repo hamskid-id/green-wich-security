@@ -85,3 +85,63 @@ export const calculateRemainingTime = (
     return { value: remainingSeconds, unit: "sec" };
   }
 };
+
+export const getStatusColor = (status: string): string => {
+  switch (status?.toLowerCase()) {
+    case "active":
+      return "success";
+    case "expired":
+      return "medium";
+    case "revoked":
+      return "danger";
+    default:
+      return "primary";
+  }
+};
+
+export const formatStatus = (status: string): string => {
+  if (!status) return "Unknown";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+};
+
+export const createFileName = (
+  visitorName: string,
+  prefix = "access-code"
+): string => {
+  const sanitizedName = visitorName.replace(/[^a-zA-Z0-9]/g, "_");
+  return `${prefix}-${sanitizedName}.png`;
+};
+
+export const downloadFile = (dataUrl: string, fileName: string): void => {
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+export const canShareFiles = (): boolean => {
+  return !!(navigator && "share" in navigator && "canShare" in navigator);
+};
+
+export const shareFile = async (
+  file: File,
+  title: string,
+  text: string
+): Promise<void> => {
+  if (canShareFiles() && navigator.canShare({ files: [file] })) {
+    await navigator.share({
+      title,
+      text,
+      files: [file],
+    });
+  } else {
+    throw new Error("File sharing not supported");
+  }
+};
+
+export const dataUrlToBlob = async (dataUrl: string): Promise<Blob> => {
+  const response = await fetch(dataUrl);
+  return await response.blob();
+};
