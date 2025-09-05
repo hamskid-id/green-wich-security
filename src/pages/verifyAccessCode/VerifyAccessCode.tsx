@@ -24,8 +24,6 @@ import "./VerifyAccessCode.css";
 import CustomInput from "../../components/ui/customInput/CustomInput";
 import CustomButton from "../../components/ui/customButton/CustomButton";
 import jsQR from "jsqr";
-import { ApiResponse, useApi } from "../../hooks/useApi";
-import { CodeData } from "../../types";
 import AlertModal from "../../components/ui/alertModal/AlertModal";
 
 const VerifyAccessCodePage: React.FC = () => {
@@ -39,7 +37,7 @@ const VerifyAccessCodePage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  
+
   const { logout } = useAuthStore();
   const history = useHistory();
 

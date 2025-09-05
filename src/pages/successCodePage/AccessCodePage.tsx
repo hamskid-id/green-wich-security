@@ -13,6 +13,7 @@ import {
   IonButton,
   IonToast,
   IonSpinner,
+  IonText,
 } from "@ionic/react";
 import { person, calendar, time, clipboard } from "ionicons/icons";
 import CustomButton from "../../components/ui/customButton/CustomButton";
@@ -128,26 +129,6 @@ const AccessCodePage: React.FC = () => {
     }
   };
 
-  if (!codeData) {
-    return (
-      <IonPage>
-        <IonHeader className="app-header">
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonBackButton defaultHref="/create-visitor-code" />
-            </IonButtons>
-            <IonTitle className="success-header-title">Error</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <div className="success-container">
-            <p>No code data found. Please go back and try again.</p>
-          </div>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
   return (
     <IonPage>
       <IonHeader className="app-header">
@@ -160,95 +141,107 @@ const AccessCodePage: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <div className="success-container">
-          {isLoading && (
-            <div className="spinner-wrapper">
-              <IonSpinner name="crescent" />
+        <div className="view-container">
+          <div className="success-container">
+            {isLoading && (
+              <div className="spinner-wrapper">
+                <IonSpinner name="crescent" />
+              </div>
+            )}
+            <div className="visitor-code-display">
+              <div className="code-label">Visitor Access Code</div>
+              <div className="visitor-code">{codeData?.code}</div>
+              <IonButton
+                fill="clear"
+                size="small"
+                onClick={handleCopyCode}
+                className="copy-button"
+              >
+                <IonIcon icon={clipboard} slot="start" />
+                Copy Code
+              </IonButton>
             </div>
-          )}
-          <div className="visitor-code-display">
-            <div className="code-label">Visitor Access Code</div>
-            <div className="visitor-code">{codeData.code}</div>
-            <IonButton
-              fill="clear"
-              size="small"
-              onClick={handleCopyCode}
-              className="copy-button"
-            >
-              <IonIcon icon={clipboard} slot="start" />
-              Copy Code
-            </IonButton>
+
+            <div className="visit-summary">
+              <h3 className="summary-title">Visit Summary</h3>
+
+              <IonItem className="summary-item" lines="none">
+                <IonIcon icon={person} slot="start" className="summary-icon" />
+                <IonLabel>
+                  <h4>Visitor Name</h4>
+                  <p>{codeData?.visitor_name}</p>
+                </IonLabel>
+              </IonItem>
+
+              {codeData?.purpose && (
+                <IonItem className="summary-item" lines="none">
+                  <IonIcon
+                    icon={calendar}
+                    slot="start"
+                    className="summary-icon"
+                  />
+                  <IonLabel>
+                    <h4>Purpose</h4>
+                    <p>{codeData.purpose}</p>
+                  </IonLabel>
+                </IonItem>
+              )}
+
+              <IonItem className="summary-item" lines="none">
+                <IonIcon icon={time} slot="start" className="summary-icon" />
+                <IonLabel>
+                  <h4>Valid Time</h4>
+                  <p>{getTimeDisplayText()}</p>
+                </IonLabel>
+              </IonItem>
+
+              <IonItem className="summary-item" lines="none">
+                <IonLabel>
+                  <h4>Date Generated</h4>
+                  <p>
+                    {codeData?.created_at && formatDate(codeData?.created_at)}
+                  </p>
+                </IonLabel>
+              </IonItem>
+              {codeData?.multiple_persons && (
+                <IonItem className="summary-item" lines="none">
+                  <IonLabel>
+                    <h4>Vistors Count</h4>
+                    <p>{codeData?.visitor_count}</p>
+                  </IonLabel>
+                </IonItem>
+              )}
+              {codeData?.notes && (
+                <IonItem className="summary-item" lines="none">
+                  <IonLabel>
+                    <h4>Additional Details</h4>
+                    <p>{codeData.notes}</p>
+                  </IonLabel>
+                </IonItem>
+              )}
+            </div>
+
+            <div className="action-buttons">
+              <CustomButton
+                loading={isValidating}
+                onClick={handleValidateCode}
+                className="done-button"
+              >
+                Validate Code
+              </CustomButton>
+            </div>
           </div>
-
-          <div className="visit-summary">
-            <h3 className="summary-title">Visit Summary</h3>
-
-            <IonItem className="summary-item" lines="none">
-              <IonIcon icon={person} slot="start" className="summary-icon" />
-              <IonLabel>
-                <h4>Visitor Name</h4>
-                <p>{codeData.visitor_name}</p>
-              </IonLabel>
-            </IonItem>
-
-            {codeData?.purpose && (
-              <IonItem className="summary-item" lines="none">
-                <IonIcon
-                  icon={calendar}
-                  slot="start"
-                  className="summary-icon"
-                />
-                <IonLabel>
-                  <h4>Purpose</h4>
-                  <p>{codeData.purpose}</p>
-                </IonLabel>
-              </IonItem>
-            )}
-
-            <IonItem className="summary-item" lines="none">
-              <IonIcon icon={time} slot="start" className="summary-icon" />
-              <IonLabel>
-                <h4>Valid Time</h4>
-                <p>{getTimeDisplayText()}</p>
-              </IonLabel>
-            </IonItem>
-
-            <IonItem className="summary-item" lines="none">
-              <IonLabel>
-                <h4>Date Generated</h4>
-                <p>{formatDate(codeData.created_at)}</p>
-              </IonLabel>
-            </IonItem>
-            {codeData.multiple_persons && (
-              <IonItem className="summary-item" lines="none">
-                <IonLabel>
-                  <h4>Vistors Count</h4>
-                  <p>{codeData.visitor_count}</p>
-                </IonLabel>
-              </IonItem>
-            )}
-            {codeData.notes && (
-              <IonItem className="summary-item" lines="none">
-                <IonLabel>
-                  <h4>Additional Details</h4>
-                  <p>{codeData.notes}</p>
-                </IonLabel>
-              </IonItem>
-            )}
-          </div>
-
-          <div className="action-buttons">
-            <CustomButton
-              loading={isValidating}
-              onClick={handleValidateCode}
-              className="done-button"
-            >
-              Validate Code
-            </CustomButton>
+          {/* Footer */}
+          <div className="view-footer">
+            <IonText color="medium" className="copyright">
+              © 2025 Greenwich Garden Estates. All rights reserved.
+              <br />
+              Version 1.0.0
+            </IonText>
           </div>
         </div>
-
         {/* Copy Toast */}
+
         <IonToast
           isOpen={showCopyToast}
           onDidDismiss={() => setShowCopyToast(false)}

@@ -205,3 +205,22 @@ ion-button.share-button {
     font-size: 13px;
   }
 }
+
+.view-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 32px 0px 0px 0px;
+  margin: 0 auto;
+}
+
+/* Footer */
+.view-footer {
+  text-align: center;
+  padding-top: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
+  border-top: 1px solid #eee;
+}
