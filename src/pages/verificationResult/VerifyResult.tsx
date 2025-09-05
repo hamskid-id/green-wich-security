@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  IonPage,
-  IonContent,
-  IonIcon,
-} from "@ionic/react";
+import { IonPage, IonContent, IonIcon, IonText } from "@ionic/react";
 import { checkmarkCircle, alertCircle } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router-dom";
 import "./VerifyResult.css";
@@ -54,54 +50,64 @@ const VerificationResultPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent className="ion-padding">
-        <div className="result-container">
-          {/* Logo Section */}
-          <div className="logo-section">
-            <div className="logo-circle">
-              <img
-                src="/div.png"
-                alt="Greenwich Garden Estates Logo"
-                className="logo-image"
-              />
-            </div>
-            <h1 className="app-title">Greenwich Garden Estates</h1>
-            <p className="app-subtitle">Visitor Access Management</p>
-          </div>
-
-          {/* Result Section */}
-          <div className="result-section">
-            <div className={`status-icon ${success ? "success" : "error"}`}>
-              <IonIcon
-                icon={success ? checkmarkCircle : alertCircle}
-                className={`status-icon-svg ${success ? "success" : "error"}`}
-              />
-            </div>
-
-            <div className="result-info">
-              <h2 className="verification-result-visitor-name">
-                {visitorName} Checked In {success ? "Successfully" : "Failed"}
-              </h2>
-              <p className="timestamp">{currentTime}</p>
-            </div>
-
-            {!success && (
-              <div className="error-details">
-                <p className="error-message">
-                  Invalid or expired access code. Please contact the resident or
-                  try again.
-                </p>
+        <div className="view-container">
+          <div className="result-container">
+            {/* Logo Section */}
+            <div className="logo-section">
+              <div className="logo-circle">
+                <img
+                  src="/div.png"
+                  alt="Greenwich Garden Estates Logo"
+                  className="logo-image"
+                />
               </div>
-            )}
-          </div>
+              <h1 className="app-title">Greenwich Garden Estates</h1>
+              <p className="app-subtitle">Visitor Access Management</p>
+            </div>
 
-          {/* Action Button */}
-          <div className="action-buttons">
-            <CustomButton
-              onClick={handleBackToEntry}
-              className="back-to-entry-button"
-            >
-              Back to Code Entry
-            </CustomButton>
+            {/* Result Section */}
+            <div className="result-section">
+              <div className={`status-icon ${success ? "success" : "error"}`}>
+                <IonIcon
+                  icon={success ? checkmarkCircle : alertCircle}
+                  className={`status-icon-svg ${success ? "success" : "error"}`}
+                />
+              </div>
+
+              <div className="result-info">
+                <h2 className="verification-result-visitor-name">
+                  {visitorName} Checked In {success ? "Successfully" : "Failed"}
+                </h2>
+                <p className="timestamp">{currentTime}</p>
+              </div>
+
+              {!success && (
+                <div className="error-details">
+                  <p className="error-message">
+                    Invalid or expired access code. Please contact the resident
+                    or try again.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Action Button */}
+            <div className="action-buttons">
+              <CustomButton
+                onClick={handleBackToEntry}
+                className="back-to-entry-button"
+              >
+                Back to Code Entry
+              </CustomButton>
+            </div>
+          </div>
+          {/* Footer */}
+          <div className="view-footer">
+            <IonText color="medium" className="copyright">
+              © 2025 Greenwich Garden Estates. All rights reserved.
+              <br />
+              Version 1.0.0
+            </IonText>
           </div>
         </div>
       </IonContent>

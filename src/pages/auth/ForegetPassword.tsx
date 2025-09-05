@@ -170,13 +170,13 @@ const ForgotPasswordPage: React.FC = () => {
 
             {step === 2 && (
               <>
-                <IonText color="medium" className="instruction-text">
-                  Enter the verification code sent to{" "}
-                  {isEmail ? "your email" : "your phone"}
-                </IonText>
+                <div className="instruction-text">
+                  <IonText color="medium">
+                    Enter the verification code sent to your email address
+                  </IonText>
+                </div>
 
                 <CustomInput
-                  label="Verification Code"
                   type="text"
                   value={verificationCode}
                   onIonInput={(e) => setVerificationCode(e.detail.value!)}
@@ -211,9 +211,11 @@ const ForgotPasswordPage: React.FC = () => {
 
             {step === 3 && (
               <>
-                <IonText color="medium" className="instruction-text">
-                  Create a new password for your account
-                </IonText>
+                <div className="instruction-text">
+                  <IonText color="medium">
+                    Create a new password for your account
+                  </IonText>
+                </div>
 
                 <CustomInput
                   icon={lockClosed}

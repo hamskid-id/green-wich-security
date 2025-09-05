@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IonPage, IonContent, IonText, IonToast, IonIcon } from "@ionic/react";
-import { call, lockClosed } from "ionicons/icons";
+import { IonPage, IonContent, IonText, IonToast } from "@ionic/react";
+import { lockClosed, person } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 import "./AuthPages.css";
@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
               <p>Enter your credentials to access the guard portal</p>
             </div>
             <CustomInput
-              icon={call}
+              icon={person}
               label="Email"
               type="email"
               value={email}

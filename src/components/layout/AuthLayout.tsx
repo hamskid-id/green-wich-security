@@ -1,4 +1,3 @@
-import React from "react";
 import { IonRouterOutlet } from "@ionic/react";
 import { Route, Redirect } from "react-router-dom";
 import LoginPage from "../../pages/auth/LoginPage";

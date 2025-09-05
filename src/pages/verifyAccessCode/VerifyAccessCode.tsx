@@ -9,53 +9,53 @@ import {
   IonButton,
   IonTitle,
   IonModal,
+  IonText,
 } from "@ionic/react";
-import { key, qrCodeOutline, close } from "ionicons/icons";
+import {
+  key,
+  qrCodeOutline,
+  close,
+  logOutOutline,
+  trash,
+} from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 import "./VerifyAccessCode.css";
 import CustomInput from "../../components/ui/customInput/CustomInput";
 import CustomButton from "../../components/ui/customButton/CustomButton";
 import jsQR from "jsqr";
+import { ApiResponse, useApi } from "../../hooks/useApi";
+import { CodeData } from "../../types";
+import AlertModal from "../../components/ui/alertModal/AlertModal";
 
 const VerifyAccessCodePage: React.FC = () => {
   const [accessCode, setAccessCode] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [showLogoutAlert, setShowLogoutAlert] = useState<boolean>(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
   const [isScanning, setIsScanning] = useState<boolean>(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-
-  const { login, isLoading } = useAuthStore();
+  
+  const { logout } = useAuthStore();
   const history = useHistory();
+
+  const handleLogout = (): void => {
+    logout();
+    history.replace("/login");
+  };
 
   const handleValidateCode = async (): Promise<void> => {
     try {
-      // Replace with your actual validation logic
-      await login({ email: accessCode, password: "" }); // Adjust as needed
-
-      // Navigate to success result page
-      history.push("/verification-result", {
-        success: true,
-        visitorName: "John Doe", // Replace with actual visitor name from API
-        accessCode: accessCode,
-        timestamp: new Date().toLocaleString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        }),
-      });
+      history.push(`/access-code/${accessCode}`);
     } catch (error: any) {
       // Navigate to failure result page
       history.push("/verification-result", {
         success: false,
-        visitorName: "Visitor Name", // Could be extracted from failed attempt
+        visitorName: "Visitor Name",
         accessCode: accessCode,
         timestamp: new Date().toLocaleString("en-US", {
           year: "numeric",
@@ -166,13 +166,9 @@ const VerifyAccessCodePage: React.FC = () => {
   };
 
   const extractAccessCodeFromQR = (qrData: string): string => {
-    // Implement your logic to extract access code from QR data
-    // This could be a simple string or JSON parsing depending on your QR format
-
     try {
-      // If QR contains JSON: {"accessCode": "123456", ...}
       const parsed = JSON.parse(qrData);
-      return parsed.accessCode || parsed.code || "";
+      return parsed.code;
     } catch {
       // If QR contains plain text access code
       const match = qrData.match(/\d{6}/); // Extract 6-digit number
@@ -214,91 +210,121 @@ const VerifyAccessCodePage: React.FC = () => {
               Guard Verification
             </IonTitle>
           </div>
+          <IonButton
+            slot="end"
+            fill="clear"
+            onClick={() => setShowLogoutAlert(true)}
+            aria-label="Logout"
+            color="danger"
+          >
+            <IonIcon icon={logOutOutline} />
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div className="verify-container">
-          {/* Logo Section */}
-          <div className="logo-section">
-            <h1 className="app-title">Verify Access Code</h1>
-            <p className="app-subtitle">Enter or scan visitor access code</p>
-          </div>
-
-          {/* Access Code Form */}
-          <div className="verify-form">
-            <CustomInput
-              icon={key}
-              label="Access Code"
-              type="text"
-              value={accessCode}
-              onIonInput={(e) => setAccessCode(e.detail.value!)}
-              placeholder="Enter 6-digit code"
-            />
-
-            <CustomButton
-              loading={isLoading}
-              disabled={!accessCode}
-              onClick={handleValidateCode}
-            >
-              Validate Code
-            </CustomButton>
-
-            {/* OR Separator */}
-            <div className="or-separator">
-              <span className="or-text">OR</span>
+        <div className="view-container">
+          <div className="verify-container">
+            {/* Logo Section */}
+            <div className="logo-section">
+              <h1 className="app-title">Verify Access Code</h1>
+              <p className="app-subtitle">Enter or scan visitor access code</p>
             </div>
 
-            {/* QR Scanner Button */}
-            <div className="action-buttons">
-              <CustomButton className="share-button" onClick={handleScanQR}>
-                <IonIcon icon={qrCodeOutline} slot="start" />
-                Scan QR Code
-              </CustomButton>
-            </div>
-          </div>
-        </div>
+            {/* Access Code Form */}
+            <div className="verify-form">
+              <CustomInput
+                icon={key}
+                label="Access Code"
+                type="text"
+                value={accessCode}
+                onIonInput={(e) => setAccessCode(e.detail.value!)}
+                placeholder="Enter 6-digit code"
+              />
 
-        {/* QR Scanner Modal */}
-        <IonModal isOpen={isQRModalOpen} onDidDismiss={closeQRModal}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Scan QR Code</IonTitle>
-              <IonButton
-                slot="end"
-                fill="clear"
-                onClick={closeQRModal}
-                aria-label="Close QR Scanner"
+              <CustomButton
+                loading={false}
+                disabled={!accessCode}
+                onClick={handleValidateCode}
               >
-                <IonIcon icon={close} />
-              </IonButton>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <div className="qr-scanner-container">
-              <div className="camera-view">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="camera-video"
-                  onLoadedData={() => {
-                    if (isScanning) detectQRCode();
-                  }}
-                />
-                <canvas ref={canvasRef} style={{ display: "none" }} />
-                <div className="scanner-overlay">
-                  <div className="scanner-frame"></div>
+                Validate Code
+              </CustomButton>
+
+              {/* OR Separator */}
+              <div className="or-separator">
+                <span className="or-text">OR</span>
+              </div>
+
+              {/* QR Scanner Button */}
+              <div className="action-buttons">
+                <CustomButton className="share-button" onClick={handleScanQR}>
+                  <IonIcon icon={qrCodeOutline} slot="start" />
+                  Scan QR Code
+                </CustomButton>
+              </div>
+            </div>
+          </div>
+
+          {/* QR Scanner Modal */}
+          <IonModal isOpen={isQRModalOpen} onDidDismiss={closeQRModal}>
+            <IonHeader>
+              <IonToolbar>
+                <IonTitle>Scan QR Code</IonTitle>
+                <IonButton
+                  slot="end"
+                  fill="clear"
+                  onClick={closeQRModal}
+                  aria-label="Close QR Scanner"
+                >
+                  <IonIcon icon={close} />
+                </IonButton>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent>
+              <div className="qr-scanner-container">
+                <div className="camera-view">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="camera-video"
+                    onLoadedData={() => {
+                      if (isScanning) detectQRCode();
+                    }}
+                  />
+                  <canvas ref={canvasRef} style={{ display: "none" }} />
+                  <div className="scanner-overlay">
+                    <div className="scanner-frame"></div>
+                  </div>
+                </div>
+                <div className="scanner-instructions">
+                  <p>Point your camera at the QR code</p>
+                  <p>Make sure the code is clearly visible</p>
                 </div>
               </div>
-              <div className="scanner-instructions">
-                <p>Point your camera at the QR code</p>
-                <p>Make sure the code is clearly visible</p>
-              </div>
-            </div>
-          </IonContent>
-        </IonModal>
-
+            </IonContent>
+          </IonModal>
+          {/* Footer */}
+          <div className="view-footer">
+            <IonText color="medium" className="copyright">
+              © 2025 Greenwich Garden Estates. All rights reserved.
+              <br />
+              Version 1.0.0
+            </IonText>
+          </div>
+        </div>
+        <AlertModal
+          isOpen={showLogoutAlert}
+          onClose={() => setShowLogoutAlert(false)}
+          onConfirm={handleLogout}
+          title="Sign Out"
+          message="Are you sure you want to sign out of your account?"
+          confirmText="Yes, Sign Out"
+          cancelText="Cancel"
+          type="danger"
+          confirmIcon={trash}
+          cancelIcon={close}
+        />
         <IonToast
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}

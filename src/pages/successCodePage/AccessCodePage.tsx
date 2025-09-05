@@ -12,50 +12,57 @@ import {
   IonLabel,
   IonButton,
   IonToast,
+  IonSpinner,
 } from "@ionic/react";
-import {
-  checkmarkCircle,
-  person,
-  calendar,
-  time,
-  clipboard,
-  arrowRedoSharp,
-} from "ionicons/icons";
+import { person, calendar, time, clipboard } from "ionicons/icons";
 import CustomButton from "../../components/ui/customButton/CustomButton";
-import "./CodeGeneratedSuccessPage.css";
-import { useLocation, useHistory } from "react-router";
-import { AccessCode, CodeData } from "../../types";
-import {
-  formatDate,
-  formatTimeDisplay,
-  formatTimeRemaining,
-} from "../../utils/helpers";
-import ShareModal from "../../components/ui/shareAccessCodeModal.tsx/ShareAccessCodeModal";
-interface LocationState {
-  codeData: AccessCode;
+import "./AccessCodePage.css";
+import { useHistory, useParams } from "react-router";
+import { AccessCode } from "../../types";
+import { formatDate, formatTimeRemaining } from "../../utils/helpers";
+import { ApiResponse, useApi } from "../../hooks/useApi";
+
+interface CodeParams {
+  code?: string;
 }
 
-const CodeGeneratedSuccessPage: React.FC = () => {
-  const location = useLocation<LocationState>();
+const AccessCodePage: React.FC = () => {
   const history = useHistory();
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false);
-  const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
-  const [shareCode, setShareCode] = useState<AccessCode | null>(null);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const { code } = useParams<CodeParams>();
+  const { useGet, usePost } = useApi();
 
-  const codeData = location.state?.codeData;
+  const { data, isError, error, isLoading } = useGet<ApiResponse<AccessCode>>(
+    ["accessCode"],
+    `/access-codes/get-by-code/${code}`
+  );
+
+  const codeData = data?.data;
+
+  const { mutate: validateCode, isPending: isValidating } = usePost<void>(
+    `/access-codes/validate/${codeData?.id}`
+  );
+
+  const handleValidateCode = async () => {
+    try {
+      const response = await validateCode(null);
+      console.log(response);
+      history.push("/verification-result", {
+        success: true,
+        visitorName: codeData?.visitor_name,
+        accessCode: codeData?.code,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      history.push("/verification-result", { success: false });
+    }
+  };
 
   // Calculate expiration time once on mount
   const expirationTime = useMemo(() => {
     if (!codeData) return null;
-
-    // If we have startTime/endTime, use endTime as expiration
-    if (codeData.end_time) {
-      return new Date(codeData.end_time).getTime();
-    }
 
     // Otherwise calculate based on expires_in
     if (codeData.expires_in) {
@@ -66,6 +73,12 @@ const CodeGeneratedSuccessPage: React.FC = () => {
 
     return null;
   }, [codeData]);
+
+  useEffect(() => {
+    if (isError && error) {
+      history.push("/verification-result", { success: false });
+    }
+  }, [isError, error, history]);
 
   useEffect(() => {
     if (!expirationTime) return;
@@ -95,12 +108,6 @@ const CodeGeneratedSuccessPage: React.FC = () => {
 
   // Determine what time information to display
   const getTimeDisplayText = () => {
-    if (codeData?.start_time && codeData?.end_time) {
-      return `${formatTimeDisplay(codeData.start_time)} - ${formatTimeDisplay(
-        codeData.end_time
-      )}`;
-    }
-
     if (isExpired) {
       return "Expired";
     }
@@ -114,30 +121,11 @@ const CodeGeneratedSuccessPage: React.FC = () => {
 
   const handleCopyCode = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(codeData.code);
+      if (codeData?.code) await navigator.clipboard.writeText(codeData?.code);
       setShowCopyToast(true);
     } catch (err) {
       console.error("Failed to copy code:", err);
     }
-  };
-
-  const handleShareCode = (): void => {
-    setShareCode(codeData);
-    setIsShareModalOpen(true);
-  };
-
-  const handleShareModalClose = () => {
-    setShareCode(null);
-    setIsShareModalOpen(false);
-  };
-
-  const handleToast = (message: string) => {
-    setToastMessage(message);
-    setShowToast(true);
-  };
-
-  const handleDone = (): void => {
-    history.push("/home");
   };
 
   if (!codeData) {
@@ -173,15 +161,11 @@ const CodeGeneratedSuccessPage: React.FC = () => {
 
       <IonContent className="ion-padding">
         <div className="success-container">
-          <div className="success-icon-container">
-            <IonIcon icon={checkmarkCircle} className="success-icon" />
-          </div>
-
-          <h2 className="success-title">Code Generated Successfully!</h2>
-          <p className="success-subtitle">
-            Your visitor access code is ready to use
-          </p>
-
+          {isLoading && (
+            <div className="spinner-wrapper">
+              <IonSpinner name="crescent" />
+            </div>
+          )}
           <div className="visitor-code-display">
             <div className="code-label">Visitor Access Code</div>
             <div className="visitor-code">{codeData.code}</div>
@@ -235,7 +219,14 @@ const CodeGeneratedSuccessPage: React.FC = () => {
                 <p>{formatDate(codeData.created_at)}</p>
               </IonLabel>
             </IonItem>
-
+            {codeData.multiple_persons && (
+              <IonItem className="summary-item" lines="none">
+                <IonLabel>
+                  <h4>Vistors Count</h4>
+                  <p>{codeData.visitor_count}</p>
+                </IonLabel>
+              </IonItem>
+            )}
             {codeData.notes && (
               <IonItem className="summary-item" lines="none">
                 <IonLabel>
@@ -247,12 +238,12 @@ const CodeGeneratedSuccessPage: React.FC = () => {
           </div>
 
           <div className="action-buttons">
-            <CustomButton onClick={handleShareCode} className="share-button">
-              <IonIcon icon={arrowRedoSharp} slot="start" />
-              Share Code
-            </CustomButton>
-            <CustomButton onClick={handleDone} className="done-button">
-              Done
+            <CustomButton
+              loading={isValidating}
+              onClick={handleValidateCode}
+              className="done-button"
+            >
+              Validate Code
             </CustomButton>
           </div>
         </div>
@@ -265,26 +256,9 @@ const CodeGeneratedSuccessPage: React.FC = () => {
           duration={2000}
           cssClass="toast-success"
         />
-
-        {/* Share Toast */}
-        <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={toastMessage}
-          duration={2000}
-          cssClass="toast-success"
-        />
-
-        {/* Share Modal */}
-        <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={handleShareModalClose}
-          accessCode={shareCode}
-          onToast={handleToast}
-        />
       </IonContent>
     </IonPage>
   );
 };
 
-export default CodeGeneratedSuccessPage;
+export default AccessCodePage;

@@ -34,7 +34,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       {...props}
     >
       <div className="button-content">
-        {loading ? <IonSpinner name="crescent" /> : <span>{children}</span>}
+        {loading ? <IonSpinner name="crescent" /> : <span className="button-flex">{children}</span>}
       </div>
     </IonButton>
   );
