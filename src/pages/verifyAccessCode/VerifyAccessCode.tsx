@@ -30,6 +30,7 @@ const VerifyAccessCodePage: React.FC = () => {
   const [accessCode, setAccessCode] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"success" | "danger">("success");
   const [showLogoutAlert, setShowLogoutAlert] = useState<boolean>(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
   const [isScanning, setIsScanning] = useState<boolean>(false);
@@ -40,6 +41,18 @@ const VerifyAccessCodePage: React.FC = () => {
 
   const { logout } = useAuthStore();
   const history = useHistory();
+
+  const showSuccessToast = (message: string): void => {
+    setToastMessage(message);
+    setToastType("success");
+    setShowToast(true);
+  };
+
+  const showErrorToast = (message: string): void => {
+    setToastMessage(message);
+    setToastType("danger");
+    setShowToast(true);
+  };
 
   const handleLogout = (): void => {
     logout();
@@ -88,8 +101,7 @@ const VerifyAccessCodePage: React.FC = () => {
       }
     } catch (error) {
       console.error("Error accessing camera:", error);
-      setToastMessage("Unable to access camera. Please check permissions.");
-      setShowToast(true);
+      showErrorToast("Unable to access camera. Please check permissions.");
       setIsScanning(false);
       setIsQRModalOpen(false);
     }
@@ -124,10 +136,6 @@ const VerifyAccessCodePage: React.FC = () => {
 
     try {
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      // Here you would integrate with a QR code library like jsQR or qr-scanner
-      // For now, this is a placeholder for the scanning logic
-
-      // Example integration point:
       const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
       if (qrCode) {
         handleQRCodeDetected(qrCode.data);
@@ -146,22 +154,18 @@ const VerifyAccessCodePage: React.FC = () => {
   const handleQRCodeDetected = (qrData: string): void => {
     stopCamera();
     setIsQRModalOpen(false);
-
-    // Extract access code from QR data
-    // Assuming QR contains just the access code or you need to parse it
+    
     const extractedCode = extractAccessCodeFromQR(qrData);
     if (extractedCode) {
       setAccessCode(extractedCode);
-      setToastMessage("QR Code scanned successfully!");
-      setShowToast(true);
+      showSuccessToast("QR Code scanned successfully!");
 
       // Auto-validate after successful scan
       setTimeout(() => {
         handleValidateCode(extractedCode);
       }, 1000);
     } else {
-      setToastMessage("Invalid QR code format");
-      setShowToast(true);
+      showErrorToast("Invalid QR code format");
     }
   };
 
@@ -330,7 +334,7 @@ const VerifyAccessCodePage: React.FC = () => {
           onDidDismiss={() => setShowToast(false)}
           message={toastMessage}
           duration={3000}
-          cssClass="toast-danger"
+          cssClass={`toast-${toastType}`}
           position="top"
         />
       </IonContent>
