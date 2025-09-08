@@ -1,15 +1,16 @@
-// src/stores/authStore.ts
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { Preferences } from "@capacitor/preferences";
 import {
   LoginCredentials,
   AuthState,
   AuthStorageState,
   RegisterCredentials,
+  LoginResponse,
 } from "../types/auth";
-import apiClient from "../api/client";
+import { AxiosResponse } from "axios";
 import { capacitorStorage } from "../utils/storage";
+import { ApiResponse } from "../types";
+import { authService } from "../api/authService";
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -20,35 +21,31 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
-      login: async (credentials: LoginCredentials): Promise<void> => {
+      login: async (
+        credentials: LoginCredentials
+      ): Promise<AxiosResponse<ApiResponse<LoginResponse>>> => {
         set({ isLoading: true, error: null });
 
         try {
-          const response = await apiClient.post("/auth/login", credentials);
+          const response = await authService.login(credentials);
           const responseData = response.data;
 
-          // Check if the response has the expected structure
           if (responseData.status === "success" && responseData.data) {
             const userData = responseData.data.user;
-
-            set({
-              user: {
-                id: userData.id,
-                first_name: userData.first_name,
-                last_name: userData.last_name,
-                email: userData.email,
-                phone: userData.phone,
-                role: userData.role,
-                status: userData.status,
-              },
-              token: responseData.data.access_token,
-              isAuthenticated: true,
-              isLoading: false,
-              error: null,
-            });
+            if (userData.status === "active") {
+              set({
+                user: userData,
+                token: responseData.data.access_token,
+                isAuthenticated: true,
+                isLoading: false,
+                error: null,
+              });
+            }
           } else {
             throw new Error(responseData.message || "Login failed");
           }
+
+          return response;
         } catch (error: any) {
           const errorMessage =
             error.response?.data?.message ||
@@ -56,11 +53,10 @@ export const useAuthStore = create<AuthState>()(
             error.message ||
             "Login failed";
 
-          set({
-            isLoading: false,
-            error: errorMessage,
-          });
+          set({ error: errorMessage });
           throw new Error(errorMessage);
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -75,15 +71,13 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuth: async (): Promise<void> => {
         const { token } = get();
-
         if (!token) {
           get().logout();
           return;
         }
 
         try {
-          // Verify token validity with backend
-          await apiClient.get("/auth/verify");
+          await authService.verifyToken();
         } catch (error) {
           console.error("Auth verification failed:", error);
           get().logout();
@@ -92,64 +86,34 @@ export const useAuthStore = create<AuthState>()(
 
       register: async (registerData: RegisterCredentials): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          const response = await apiClient.post("/auth/register", registerData);
-          const data = response.data;
-
-          // Optionally auto-login after successful registration
-          // Or just set success state without logging in
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
+          await authService.register(registerData);
         } catch (error: any) {
           const errorMessage =
             error.response?.data?.message ||
             error.message ||
             "Registration failed";
-          set({
-            isLoading: false,
-            error: errorMessage,
-          });
+          set({ error: errorMessage });
           throw new Error(errorMessage);
+        } finally {
+          set({ isLoading: false });
         }
       },
 
-      clearError: (): void => {
-        set({ error: null });
-      },
+      clearError: () => set({ error: null }),
 
-      // Password reset functionality
       requestPasswordReset: async (contactInfo: string): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          // Determine if contactInfo is email or phone number
-          const isEmail = contactInfo.includes("@");
-          const payload = isEmail
-            ? { email: contactInfo }
-            : { phoneNumber: contactInfo };
-
-          await apiClient.post("/auth/forgot-password", payload);
-
-          set({
-            isLoading: false,
-            error: null,
-          });
+          await authService.requestPasswordReset(contactInfo);
+          set({ isLoading: false });
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Password reset request failed";
           set({
-            isLoading: false,
-            error: errorMessage,
+            error: error.message || "Password reset failed",
           });
-          throw new Error(errorMessage);
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -158,30 +122,16 @@ export const useAuthStore = create<AuthState>()(
         contactInfo: string
       ): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          // Determine if contactInfo is email or phone number
-          const isEmail = contactInfo.includes("@");
-          const payload = isEmail
-            ? { email: contactInfo, code: parseInt(code) }
-            : { phoneNumber: contactInfo, code: parseInt(code) };
-
-          await apiClient.post("/auth/verify-reset-code", payload);
-
-          set({
-            isLoading: false,
-            error: null,
-          });
+          await authService.verifyResetCode(code, contactInfo);
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Invalid verification code";
           set({
             isLoading: false,
-            error: errorMessage,
+            error: error.message || "Invalid verification code",
           });
-          throw new Error(errorMessage);
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -191,90 +141,46 @@ export const useAuthStore = create<AuthState>()(
         contactInfo: string
       ): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          // Determine if contactInfo is email or phone number
-          const isEmail = contactInfo.includes("@");
-          const payload = isEmail
-            ? {
-                email: contactInfo,
-                code: parseInt(code),
-                password: newPassword,
-                password_confirmation: newPassword,
-              }
-            : {
-                phoneNumber: contactInfo,
-                code: parseInt(code),
-                password: newPassword,
-                password_confirmation: newPassword,
-              };
-
-          await apiClient.post("/auth/reset-password", payload);
-
-          set({
-            isLoading: false,
-            error: null,
-          });
+          await authService.resetPassword(code, newPassword, contactInfo);
+          set({ isLoading: false });
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Password reset failed";
           set({
-            isLoading: false,
-            error: errorMessage,
+            error: error.message || "Password reset failed",
           });
-          throw new Error(errorMessage);
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
 
-      // Email verification functionality
       verifyEmail: async (email: string, code: string): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          await apiClient.post("/auth/verify-email", {
-            email,
-            code: parseInt(code),
-          });
-
-          set({
-            isLoading: false,
-            error: null,
-          });
+          await authService.verifyEmail(email, code);
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Email verification failed";
           set({
             isLoading: false,
-            error: errorMessage,
+            error: error.message || "Email verification failed",
           });
-          throw new Error(errorMessage);
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
 
       resendVerificationCode: async (email: string): Promise<void> => {
         set({ isLoading: true, error: null });
-
         try {
-          await apiClient.post("/auth/resend-verify-code", { email });
-
-          set({
-            isLoading: false,
-            error: null,
-          });
+          await authService.resendVerificationCode(email);
+          set({ isLoading: false });
         } catch (error: any) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Failed to resend verification code";
           set({
-            isLoading: false,
-            error: errorMessage,
+            error: error.message || "Failed to resend verification code",
           });
-          throw new Error(errorMessage);
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
     }),

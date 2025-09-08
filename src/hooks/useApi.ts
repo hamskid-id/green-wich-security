@@ -33,6 +33,14 @@ export interface ApiError {
   message: string;
   status: number;
   errors?: Record<string, string[]>;
+  response?: {
+    data?: {
+      message?: string;
+      status?: number;
+      errors?: Record<string, string[]>;
+    };
+    status?: number;
+  };
 }
 
 // Pagination parameters

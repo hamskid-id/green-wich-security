@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { IonPage, IonContent, IonText, IonToast } from "@ionic/react";
+import React, { useState, useEffect } from "react";
+import {
+  IonPage,
+  IonContent,
+  IonText,
+  IonToast,
+  IonInputOtp,
+} from "@ionic/react";
 import { call, lockClosed, mail } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import "./AuthPages.css";
@@ -19,94 +25,130 @@ const ForgotPasswordPage: React.FC = () => {
     "toast-success" | "toast-danger"
   >("toast-danger");
 
-  // Using the useAuth hook instead of useAuthStore directly
   const { requestPasswordReset, verifyResetCode, resetPassword, isLoading } =
     useAuth();
+
   const history = useHistory();
 
   // Check if input is email or phone
   const isEmail = contactInfo.includes("@");
 
+  // Auto-submit when OTP is complete
+  useEffect(() => {
+    if (verificationCode.length === 4 && step === 2) {
+      handleVerifyCode();
+    }
+  }, [verificationCode, step]);
+
+  const showToastMessage = (
+    message: string,
+    color: "toast-success" | "toast-danger"
+  ) => {
+    setToastMessage(message);
+    setToastColor(color);
+    setShowToast(true);
+  };
+
   const handleResetRequest = async (): Promise<void> => {
     if (!contactInfo.trim()) {
-      setToastMessage("Please enter your email");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage("Please enter your email", "toast-danger");
       return;
     }
 
     try {
       await requestPasswordReset(contactInfo);
       setStep(2);
-      setToastMessage("Verification code sent successfully");
-      setToastColor("toast-success");
-      setShowToast(true);
+      showToastMessage("Verification code sent successfully", "toast-success");
     } catch (error: any) {
-      setToastMessage(error.message || "Password reset request failed");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Password reset request failed",
+        "toast-danger"
+      );
     }
   };
 
   const handleVerifyCode = async (): Promise<void> => {
-    if (!verificationCode.trim()) {
-      setToastMessage("Please enter the verification code");
-      setToastColor("toast-danger");
-      setShowToast(true);
+    if (!verificationCode.trim() || verificationCode.length !== 4) {
+      showToastMessage(
+        "Please enter the complete 4-digit verification code",
+        "toast-danger"
+      );
       return;
     }
 
     try {
       await verifyResetCode(verificationCode, contactInfo);
       setStep(3);
-      setToastMessage("Code verified successfully");
-      setToastColor("toast-success");
-      setShowToast(true);
+      showToastMessage("Code verified successfully", "toast-success");
     } catch (error: any) {
-      setToastMessage(error.message || "Invalid verification code");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Invalid verification code",
+        "toast-danger"
+      );
+      // Clear the code on error so user can re-enter
+      setVerificationCode("");
     }
   };
 
   const handlePasswordReset = async (): Promise<void> => {
     if (newPassword !== confirmPassword) {
-      setToastMessage("Passwords do not match");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage("Passwords do not match", "toast-danger");
       return;
     }
 
     if (newPassword.length < 6) {
-      setToastMessage("Password must be at least 6 characters long");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        "Password must be at least 6 characters long",
+        "toast-danger"
+      );
       return;
     }
 
     try {
       await resetPassword(verificationCode, newPassword, contactInfo);
-      setToastMessage("Password reset successfully! Redirecting to login...");
-      setToastColor("toast-success");
-      setShowToast(true);
+      showToastMessage(
+        "Password reset successfully! Redirecting to login...",
+        "toast-success"
+      );
       setTimeout(() => history.push("/login"), 2000);
     } catch (error: any) {
-      setToastMessage(error.message || "Password reset failed");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Password reset failed",
+        "toast-danger"
+      );
     }
   };
 
   const handleResendCode = async (): Promise<void> => {
     try {
       await requestPasswordReset(contactInfo);
-      setToastMessage("Verification code resent successfully");
-      setToastColor("toast-success");
-      setShowToast(true);
+      setVerificationCode(""); // Clear existing code
+      showToastMessage(
+        "Verification code resent successfully",
+        "toast-success"
+      );
     } catch (error: any) {
-      setToastMessage(error.message || "Failed to resend verification code");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Failed to resend verification code",
+        "toast-danger"
+      );
+    }
+  };
+
+  const handleOtpInput = (value: string) => {
+    setVerificationCode(value);
+  };
+
+  const getStepTitle = () => {
+    switch (step) {
+      case 1:
+        return "Reset Your Password";
+      case 2:
+        return "Verify Your Identity";
+      case 3:
+        return "Create New Password";
+      default:
+        return "Reset Your Password";
     }
   };
 
@@ -124,13 +166,7 @@ const ForgotPasswordPage: React.FC = () => {
               />
             </div>
             <h1 className="app-title">Greenwich Garden Estates</h1>
-            <p className="app-subtitle">
-              {step === 1
-                ? "Reset Your Password"
-                : step === 2
-                ? "Verify Your Identity"
-                : "Create New Password"}
-            </p>
+            <p className="app-subtitle">{getStepTitle()}</p>
           </div>
 
           {/* Auth Tabs */}
@@ -155,7 +191,7 @@ const ForgotPasswordPage: React.FC = () => {
                   type={isEmail ? "email" : "tel"}
                   value={contactInfo}
                   onIonInput={(e) => setContactInfo(e.detail.value!)}
-                  placeholder="email@example.com "
+                  placeholder="email@example.com"
                 />
 
                 <CustomButton
@@ -172,40 +208,42 @@ const ForgotPasswordPage: React.FC = () => {
               <>
                 <div className="instruction-text">
                   <IonText color="medium">
-                    Enter the verification code sent to your email address
+                    We've sent a 4-digit verification code to {contactInfo}. The
+                    code will be submitted automatically when complete.
                   </IonText>
                 </div>
 
-                <CustomInput
-                  type="text"
-                  value={verificationCode}
-                  onIonInput={(e) => setVerificationCode(e.detail.value!)}
-                  placeholder="Enter verification code"
-                />
-
-                <div className="resend-code">
-                  <IonText color="medium">Didn't receive the code?</IonText>
-                  <IonText
-                    color="primary"
-                    className="resend-link"
-                    onClick={handleResendCode}
-                    style={{
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                      marginLeft: "8px",
-                    }}
+                <div className="code-inputs-container">
+                  <IonInputOtp
+                    value={verificationCode}
+                    onIonInput={(e) => handleOtpInput(e.detail.value!)}
+                    className={`ion-touched has-focus ${
+                      verificationCode.length === 4
+                        ? "ion-valid"
+                        : "ion-invalid"
+                    }`}
                   >
-                    Resend Code
-                  </IonText>
+                    Didn't get a code?{" "}
+                    <span
+                      className="resend-text"
+                      onClick={handleResendCode}
+                      style={{ cursor: "pointer", textDecoration: "underline" }}
+                    >
+                      Resend the code
+                    </span>
+                  </IonInputOtp>
                 </div>
 
-                <CustomButton
-                  loading={isLoading}
-                  disabled={!verificationCode.trim()}
-                  onClick={handleVerifyCode}
-                >
-                  Verify Code
-                </CustomButton>
+                {/* Optional manual verify button for backup */}
+                {verificationCode.length === 4 && (
+                  <CustomButton
+                    loading={isLoading}
+                    onClick={handleVerifyCode}
+                    style={{ marginTop: "1rem" }}
+                  >
+                    Verify Code Manually
+                  </CustomButton>
+                )}
               </>
             )}
 

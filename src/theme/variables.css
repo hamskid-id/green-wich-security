@@ -5,6 +5,10 @@ ion-tab-button.tab-selected {
   color: #004225 !important;
 }
 
+ion-content {
+  --keyboard-offset: 0px !important;
+}
+
 /* Sonner-style toast customizations */
 ion-toast {
   --border-radius: 8px;

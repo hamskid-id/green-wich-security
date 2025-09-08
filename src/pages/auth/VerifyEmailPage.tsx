@@ -1,18 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonPage,
   IonContent,
   IonText,
   IonToast,
-  IonIcon,
-  IonButton,
-  IonInput,
+  IonInputOtp,
 } from "@ionic/react";
-import { mail, arrowBack } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 import "./AuthPages.css";
-import CustomInput from "../../components/ui/customInput/CustomInput";
 import CustomButton from "../../components/ui/customButton/CustomButton";
 
 interface LocationState {
@@ -21,7 +17,7 @@ interface LocationState {
 
 const VerifyEmailPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
-  const [code, setCode] = useState<string>("");
+  const [verificationCode, setVerificationCode] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastColor, setToastColor] = useState<
@@ -33,8 +29,6 @@ const VerifyEmailPage: React.FC = () => {
   const { verifyEmail, resendVerificationCode, isLoading } = useAuthStore();
   const history = useHistory();
   const location = useLocation<LocationState>();
-
-  const codeInputRefs = useRef<Array<HTMLIonInputElement | null>>([]);
 
   // Set email from navigation state if available
   useEffect(() => {
@@ -51,185 +45,152 @@ const VerifyEmailPage: React.FC = () => {
     }
   }, [countdown]);
 
+  // Auto-submit when OTP is complete
+  useEffect(() => {
+    if (verificationCode.length === 4) {
+      handleVerifyEmail();
+    }
+  }, [verificationCode]);
+
+  const showToastMessage = (
+    message: string,
+    color: "toast-success" | "toast-danger"
+  ) => {
+    setToastMessage(message);
+    setToastColor(color);
+    setShowToast(true);
+  };
+
   const handleVerifyEmail = async (): Promise<void> => {
-    if (!email || !code) {
-      setToastMessage("Please enter both email and verification code");
-      setToastColor("toast-danger");
-      setShowToast(true);
+    if (!email) {
+      showToastMessage("Email address is required", "toast-danger");
       return;
     }
 
-    if (code.length !== 4) {
-      setToastMessage("Verification code must be 4 digits");
-      setToastColor("toast-danger");
-      setShowToast(true);
+    if (!verificationCode.trim() || verificationCode.length !== 4) {
+      showToastMessage(
+        "Please enter the complete 4-digit verification code",
+        "toast-danger"
+      );
       return;
     }
 
     try {
-      await verifyEmail(email, code);
-      setToastMessage("Email verified successfully!");
-      setToastColor("toast-success");
-      setShowToast(true);
-
-      // Redirect to login or dashboard after successful verification
+      await verifyEmail(email, verificationCode);
+      showToastMessage("Email verified successfully!", "toast-success");
       setTimeout(() => {
-        history.push("/login");
-      }, 1500);
+        history.push("/account-in-progress");
+      }, 2000);
     } catch (error: any) {
-      setToastMessage(error.message || "Email verification failed");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Email verification failed",
+        "toast-danger"
+      );
+      // Clear the code on error so user can re-enter
+      setVerificationCode("");
     }
   };
 
   const handleResendCode = async (): Promise<void> => {
     if (!email) {
-      setToastMessage("Please enter your email address");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage("Email address is required", "toast-danger");
       return;
     }
 
     setIsResending(true);
     try {
       await resendVerificationCode(email);
-      setToastMessage("Verification code sent to your email");
-      setToastColor("toast-success");
-      setShowToast(true);
+      setVerificationCode("");
+      showToastMessage("Verification code sent to your email", "toast-success");
       setCountdown(60); // 60 second countdown
     } catch (error: any) {
-      setToastMessage(error.message || "Failed to resend verification code");
-      setToastColor("toast-danger");
-      setShowToast(true);
+      showToastMessage(
+        error.message || "Failed to resend verification code",
+        "toast-danger"
+      );
     } finally {
       setIsResending(false);
     }
   };
 
-  const handleCodeChange = (value: string, index: number) => {
-    // Only allow numeric input and limit to 1 character
-    const numericValue = value.replace(/[^0-9]/g, "").slice(0, 1);
-
-    // Update the code
-    const newCode = code.split("");
-    newCode[index] = numericValue;
-    setCode(newCode.join("").slice(0, 4));
-
-    // Auto-focus next input if current is filled
-    if (numericValue && index < 3) {
-      const nextInput = codeInputRefs.current[index + 1];
-      if (nextInput) {
-        nextInput.setFocus();
-      }
-    }
+  const handleOtpInput = (value: string) => {
+    setVerificationCode(value);
   };
-
-  const handleKeyDown = (event: any, index: number) => {
-    // Handle backspace to go to previous input
-    if (event.key === "Backspace" && !code[index] && index > 0) {
-      const prevInput = codeInputRefs.current[index - 1];
-      if (prevInput) {
-        prevInput.setFocus();
-      }
-    }
-  };
-
-  const isFormValid = email && code.length === 4;
 
   return (
     <IonPage>
       <IonContent className="auth-content">
         <div className="auth-container">
-          {/* Back Button */}
-          <div className="back-button-container">
-            <IonButton
-              fill="clear"
-              onClick={() => history.goBack()}
-              className="back-button"
-            >
-              <IonIcon icon={arrowBack} />
-            </IonButton>
-          </div>
-
           {/* Logo Section */}
           <div className="logo-section">
-            <div className="verification-icon-container">
-              <IonIcon icon={mail} className="verification-icon" />
+            <div className="logo-circle">
+              <img
+                src="/div.png"
+                alt="Greenwich Garden Estates Logo"
+                className="logo-image"
+              />
             </div>
-            <h1 className="verification-title">Verify Your Email</h1>
-            <p className="verification-subtitle">
-              We've sent a 4-digit verification code to your email address.
-              Please enter the code below to verify your account.
-            </p>
+            <h1 className="app-title">Greenwich Garden Estates</h1>
+            <p className="app-subtitle">Verify Your Identity</p>
           </div>
 
-          {/* Verification Form */}
-          <div className="auth-form verification-form">
-            <CustomInput
-              icon={mail}
-              label="Email Address"
-              type="email"
-              value={email}
-              onIonInput={(e) => setEmail(e.detail.value!)}
-              placeholder="Enter your email address"
-              readonly={!!location.state?.email}
-            />
-
-            <div className="verification-code-section">
-              <label className="code-label">Verification Code</label>
-              <div className="code-inputs-container">
-                {[0, 1, 2, 3].map((index) => (
-                  <div key={index} className="code-input-wrapper">
-                    <IonInput
-                      ref={(el) => {
-                        codeInputRefs.current[index] = el;
-                      }}
-                      type="tel"
-                      maxlength={1}
-                      value={code[index] || ""}
-                      onIonInput={(e) =>
-                        handleCodeChange(e.detail.value!, index)
-                      }
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                      className="code-input"
-                      placeholder="0"
-                    />
-                  </div>
-                ))}
-              </div>
+          {/* Auth Tabs */}
+          <div className="auth-tabs">
+            <div className="auth-tab" onClick={() => history.push("/login")}>
+              Login
             </div>
+            <div className="auth-tab active">Verify Email</div>
+          </div>
 
-            <CustomButton
-              loading={isLoading}
-              disabled={!isFormValid}
-              onClick={handleVerifyEmail}
-              className="verify-button"
-            >
-              Verify Email
-            </CustomButton>
-
-            {/* Resend Code Section */}
-            <div className="resend-section">
-              <IonText color="medium" className="resend-text">
-                Didn't receive the code?
+          {/* Form Content */}
+          <div className="auth-form">
+            <div className="instruction-text">
+              <IonText color="medium">
+                {email
+                  ? `We've sent a 4-digit verification code to ${email}. The code will be submitted automatically when complete.`
+                  : "We've sent a 4-digit verification code to your email. The code will be submitted automatically when complete."}
               </IonText>
-              <IonButton
-                fill="clear"
-                size="small"
-                onClick={handleResendCode}
-                disabled={countdown > 0 || isResending}
-                className="resend-button"
-              >
-                {countdown > 0
-                  ? `Resend in ${countdown}s`
-                  : isResending
-                  ? "Sending..."
-                  : "Resend Code"}
-              </IonButton>
             </div>
 
-            {/* Support Link */}
+            <div className="code-inputs-container">
+              <IonInputOtp
+                value={verificationCode}
+                onIonInput={(e) => handleOtpInput(e.detail.value!)}
+                className={`ion-touched has-focus ${
+                  verificationCode.length === 4 ? "ion-valid" : "ion-invalid"
+                }`}
+              >
+                Didn't get a code?{" "}
+                <span
+                  className="resend-text"
+                  onClick={handleResendCode}
+                  style={{
+                    cursor:
+                      countdown > 0 || isResending ? "not-allowed" : "pointer",
+                    textDecoration: "underline",
+                    opacity: countdown > 0 || isResending ? 0.5 : 1,
+                  }}
+                >
+                  {countdown > 0
+                    ? `Resend in ${countdown}s`
+                    : isResending
+                    ? "Sending..."
+                    : "Resend the code"}
+                </span>
+              </IonInputOtp>
+            </div>
+
+            {/* Optional manual verify button for backup */}
+            {verificationCode.length === 4 && (
+              <CustomButton
+                loading={isLoading}
+                onClick={handleVerifyEmail}
+                style={{ marginTop: "1rem" }}
+              >
+                Verify Email Manually
+              </CustomButton>
+            )}
+
             <div className="support-link">
               <IonText color="medium">
                 Need help?{" "}
@@ -248,6 +209,8 @@ const VerifyEmailPage: React.FC = () => {
           <div className="auth-footer">
             <IonText color="medium" className="copyright">
               © 2025 Greenwich Garden Estates. All rights reserved.
+              <br />
+              Version 1.0.0
             </IonText>
           </div>
         </div>

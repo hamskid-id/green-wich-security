@@ -7,6 +7,7 @@ import CustomButton from "../../components/ui/customButton/CustomButton";
 
 interface LocationState {
   success: boolean;
+  error?: string;
   visitorName?: string;
   timestamp?: string;
   accessCode?: string;
@@ -20,7 +21,10 @@ const VerificationResultPage: React.FC = () => {
   // Get data from navigation state or default values
   const success = location.state?.success ?? true;
   const visitorName = location.state?.visitorName ?? "Visitor Name";
-  const accessCode = location.state?.accessCode ?? "";
+  const error =
+    location.state?.error ??
+    `Invalid or expired access code. Please contact the resident
+                    or try again.`;
   const timestamp = location.state?.timestamp;
 
   useEffect(() => {
@@ -40,11 +44,7 @@ const VerificationResultPage: React.FC = () => {
   }, [timestamp]);
 
   const handleBackToEntry = (): void => {
-    history.push("/verify-access-code");
-  };
-
-  const handleGoHome = (): void => {
-    history.push("/home");
+    history.push("/");
   };
 
   return (
@@ -78,15 +78,14 @@ const VerificationResultPage: React.FC = () => {
                 <h2 className="verification-result-visitor-name">
                   {visitorName} Checked In {success ? "Successfully" : "Failed"}
                 </h2>
-                <p className="timestamp">{currentTime}</p>
+                <p className="timestamp">
+                  {new Date(currentTime)?.toUTCString()}
+                </p>
               </div>
 
               {!success && (
                 <div className="error-details">
-                  <p className="error-message">
-                    Invalid or expired access code. Please contact the resident
-                    or try again.
-                  </p>
+                  <p className="error-message">{error}</p>
                 </div>
               )}
             </div>

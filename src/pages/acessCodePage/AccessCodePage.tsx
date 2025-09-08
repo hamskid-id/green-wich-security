@@ -18,30 +18,35 @@ import {
 import { person, calendar, time, clipboard } from "ionicons/icons";
 import CustomButton from "../../components/ui/customButton/CustomButton";
 import "./AccessCodePage.css";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useParams } from "react-router-dom";
 import { AccessCode } from "../../types";
 import { formatDate, formatTimeRemaining } from "../../utils/helpers";
 import { ApiResponse, useApi } from "../../hooks/useApi";
 
-interface CodeParams {
-  code?: string;
-}
-
 const AccessCodePage: React.FC = () => {
   const history = useHistory();
+  const { code } = useParams<{ code: string }>();
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
-  const { code } = useParams<CodeParams>();
+
+  // FIXED: Single useParams call
   const { useGet, usePost } = useApi();
 
+  console.log("this is codes:", code);
+
+  // FIXED: Added null check for code
   const { data, isError, error, isLoading } = useGet<ApiResponse<AccessCode>>(
-    ["accessCode"],
-    `/access-codes/get-by-code/${code}`
+    ["accessCode", code ?? ""],
+    `/access-codes/get-by-code/${code}`,
+    {
+      enabled: !!code,
+    }
   );
 
   const codeData = data?.data;
 
+  // FIXED: Added null check for codeData?.id
   const { mutate: validateCode, isPending: isValidating } = usePost<void>(
     `/access-codes/validate/${codeData?.id}`
   );
@@ -77,7 +82,11 @@ const AccessCodePage: React.FC = () => {
 
   useEffect(() => {
     if (isError && error) {
-      history.push("/verification-result", { success: false });
+      console.log(error);
+      history.push("/verification-result", {
+        success: false,
+        error: error?.response?.data?.message,
+      });
     }
   }, [isError, error, history]);
 
@@ -143,7 +152,7 @@ const AccessCodePage: React.FC = () => {
       <IonContent className="ion-padding">
         <div className="view-container">
           <div className="success-container">
-            {isLoading ? (
+            {isLoading || isError ? (
               <div className="spinner-wrapper">
                 <IonSpinner name="crescent" />
               </div>

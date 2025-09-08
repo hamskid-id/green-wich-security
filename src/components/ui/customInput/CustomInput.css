@@ -1,5 +1,11 @@
+/* Add these CSS fixes to prevent layout issues on mobile when input is focused */
+
+/* 1. Prevent viewport height changes from affecting layout */
 .custom-input-container {
   margin-bottom: 20px;
+  /* Prevent iOS Safari from zooming when input is focused */
+  -webkit-user-select: auto;
+  user-select: auto;
 }
 
 .input-label {
@@ -9,15 +15,35 @@
   font-weight: 500;
 }
 
+ion-item.custom-input-item {
+  height: 48px !important;
+  /* Prevent input zoom on iOS */
+  transform: scale(1);
+  -webkit-transform: scale(1);
+}
+
+ion-item.multiline.custom-input-item {
+  height: 78px !important;
+  align-items: start !important;
+  min-height: 96px !important;
+  /* Prevent input zoom on iOS */
+  transform: scale(1);
+  -webkit-transform: scale(1);
+}
+
 .custom-input-item {
- --background: #f8f9fa;
-    --border-radius: 8px;
-    --padding-start: 12px;
-    --padding-end: 12px;
-    margin-bottom: 4px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-   min-height: 48px !important;
+  --background: #f8f9fa;
+  --border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  margin-bottom: 4px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 48px !important;
+
+  /* Prevent iOS Safari zoom */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .custom-input-item:focus-within {
@@ -28,18 +54,97 @@
 
 .input-icon {
   color: #999;
-  font-size: 16px !important;
-  margin-right: 12px;
+  font-size: 12px !important;
+  margin-right: 12px !important;
 }
 
-.custom-input, .custom-textarea {
+.custom-input,
+.custom-textarea {
   --color: #333;
   --placeholder-color: #999;
-  font-size: 14px;
+  font-size: 12px !important; /* Important: Use 16px to prevent iOS zoom */
   flex: 1;
+
+  /* Prevent input zoom and layout shifts */
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-user-select: auto;
+  user-select: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .custom-input-item.item-disabled {
   --background: #f5f5f5;
   opacity: 0.6;
+}
+
+/* Mobile-specific fixes */
+@media screen and (max-width: 768px) {
+  /* Prevent viewport height changes from affecting layout */
+  html,
+  body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix for iOS Safari viewport issues */
+  .ion-page {
+    /* Use fixed height instead of 100vh to prevent keyboard issues */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Prevent zoom on input focus */
+  .custom-input,
+  .custom-textarea {
+    font-size: 16px !important; /* Minimum 16px prevents iOS zoom */
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+
+  /* Smooth transitions for keyboard appearance */
+  .custom-input-container {
+    transition: margin-bottom 0.3s ease;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS Safari 100vh issue */
+  .ion-page {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Prevent elastic scrolling issues */
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ion-content {
+    --overflow: auto;
+  }
+}
+
+/* Additional fix for Ionic apps */
+.ion-content.keyboard-is-open {
+  /* Prevent content from jumping when keyboard appears */
+  --keyboard-offset: 0px;
+}
+
+/* Fix for Android soft keyboard */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .custom-input-container {
+    /* Reduce bottom margin on mobile portrait */
+    margin-bottom: 16px;
+  }
+
+  /* Prevent layout shifts */
+  .ion-content {
+    --padding-bottom: env(keyboard-inset-height, 0px);
+  }
 }

@@ -3,7 +3,7 @@ import { IonRouterOutlet } from "@ionic/react";
 import { Route, Redirect } from "react-router-dom";
 import VerifyAccessCodePage from "../../pages/verifyAccessCode/VerifyAccessCode";
 import VerificationResultPage from "../../pages/verificationResult/VerifyResult";
-import AccessCodePage from "../../pages/successCodePage/AccessCodePage";
+import AccessCodePage from "../../pages/acessCodePage/AccessCodePage";
 
 const MobileLayout: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const MobileLayout: React.FC = () => {
         exact
       />
 
-      <Route path="/access-code/:code" component={AccessCodePage} exact />
+      <Route path="/access-code/:code" component={AccessCodePage} />
 
       {/* Default redirect */}
       <Route

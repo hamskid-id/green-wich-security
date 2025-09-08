@@ -1,4 +1,3 @@
-// src/types/index.ts
 export interface User {
   id: string;
   name: string;
@@ -15,7 +14,7 @@ export interface Visitor {
   code: string;
   startTime: string;
   endTime: string;
-  status: 'scheduled' | 'active' | 'completed' | 'cancelled';
+  status: "scheduled" | "active" | "completed" | "cancelled";
   notes?: string;
 }
 
@@ -25,7 +24,7 @@ export interface Notification {
   message: string;
   timestamp: string;
   read: boolean;
-  type: 'info' | 'warning' | 'alert' | 'success';
+  type: "info" | "warning" | "alert" | "success";
 }
 
 export interface AuthState {
@@ -38,7 +37,6 @@ export interface AuthState {
   checkAuth: () => Promise<void>;
 }
 
-// types/accessCode.ts
 export interface Unit {
   id: string;
   name: string;
@@ -121,4 +119,10 @@ export interface ProfileCardProps {
   children: React.ReactNode;
   icon?: string;
   className?: string;
+}
+
+export interface ApiResponse<T> {
+  status: string;
+  message: string;
+  data: T;
 }
