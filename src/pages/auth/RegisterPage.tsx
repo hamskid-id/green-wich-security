@@ -42,7 +42,11 @@ const RegisterPage: React.FC = () => {
       // Registration successful - maybe redirect to verification page or login
       history.push("/verify-email", { email });
     } catch (error: any) {
-      setToastMessage(error.message || "Registration failed");
+      setToastMessage(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Registration failed"
+      );
       setShowToast(true);
     }
   };

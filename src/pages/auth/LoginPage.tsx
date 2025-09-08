@@ -18,8 +18,12 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (): Promise<void> => {
     try {
-      await login({ email: email, password: password });
-      history.push("/verify-acess-codes");
+      const response = await login({ email: email, password: password });
+      if (response?.data?.data?.user?.status !== "active") {
+        history.push("/account-in-progress");
+      } else {
+        history.push("/home");
+      }
     } catch (error: any) {
       setToastMessage(error.message || "Login failed");
       setShowToast(true);

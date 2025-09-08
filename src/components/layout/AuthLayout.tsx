@@ -4,6 +4,7 @@ import LoginPage from "../../pages/auth/LoginPage";
 import ForgotPasswordPage from "../../pages/auth/ForegetPassword";
 import VerifyEmailPage from "../../pages/auth/VerifyEmailPage";
 import RegisterPage from "../../pages/auth/RegisterPage";
+import PendingStatusPage from "../../pages/auth/PendingStatusPage";
 
 const AuthLayout = () => {
   return (
@@ -12,7 +13,7 @@ const AuthLayout = () => {
       <Route path="/register" component={RegisterPage} exact />
       <Route path="/forgot-password" component={ForgotPasswordPage} exact />
       <Route path="/verify-email" component={VerifyEmailPage} exact />
-
+      <Route path="/account-in-progress" component={PendingStatusPage} exact />
       {/* Default to login */}
       <Route exact path="/">
         <Redirect to="/login" />

@@ -48,13 +48,13 @@ const VerifyAccessCodePage: React.FC = () => {
 
   const handleValidateCode = async (): Promise<void> => {
     try {
-      
       const code = accessCode;
       history.push(`/access-code/${code}`);
     } catch (error: any) {
       // Navigate to failure result page
       history.push("/verification-result", {
         success: false,
+        error: error?.response?.data?.message || error?.message,
         visitorName: "Visitor Name",
         accessCode: accessCode,
         timestamp: new Date().toLocaleString("en-US", {

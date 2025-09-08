@@ -62,7 +62,10 @@ const AccessCodePage: React.FC = () => {
         timestamp: new Date().toISOString(),
       });
     } catch (err) {
-      history.push("/verification-result", { success: false });
+      history.push("/verification-result", {
+        success: false,
+        error: error?.response?.data?.message || error?.message,
+      });
     }
   };
 
@@ -85,7 +88,7 @@ const AccessCodePage: React.FC = () => {
       console.log(error);
       history.push("/verification-result", {
         success: false,
-        error: error?.response?.data?.message,
+        error: error?.response?.data?.message || error?.message,
       });
     }
   }, [isError, error, history]);

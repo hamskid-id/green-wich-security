@@ -13,6 +13,14 @@
   padding: 20px;
 }
 
+.pending-text {
+  line-height: 25px;
+  text-align: center !important;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+
 .auth-container {
   min-height: 100%;
   display: flex;

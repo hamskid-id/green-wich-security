@@ -61,7 +61,7 @@ const ForgotPasswordPage: React.FC = () => {
       showToastMessage("Verification code sent successfully", "toast-success");
     } catch (error: any) {
       showToastMessage(
-        error.message || "Password reset request failed",
+        error?.response?.data?.message || "Password reset request failed",
         "toast-danger"
       );
     }
@@ -82,7 +82,7 @@ const ForgotPasswordPage: React.FC = () => {
       showToastMessage("Code verified successfully", "toast-success");
     } catch (error: any) {
       showToastMessage(
-        error.message || "Invalid verification code",
+        error?.response?.data?.message || "Invalid verification code",
         "toast-danger"
       );
       // Clear the code on error so user can re-enter
@@ -113,7 +113,7 @@ const ForgotPasswordPage: React.FC = () => {
       setTimeout(() => history.push("/login"), 2000);
     } catch (error: any) {
       showToastMessage(
-        error.message || "Password reset failed",
+        error?.response?.data?.message || "Password reset failed",
         "toast-danger"
       );
     }
@@ -129,7 +129,7 @@ const ForgotPasswordPage: React.FC = () => {
       );
     } catch (error: any) {
       showToastMessage(
-        error.message || "Failed to resend verification code",
+        error?.response?.data?.message || "Failed to resend verification code",
         "toast-danger"
       );
     }
