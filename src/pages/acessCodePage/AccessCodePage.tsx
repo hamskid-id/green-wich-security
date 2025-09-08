@@ -158,7 +158,7 @@ const AccessCodePage: React.FC = () => {
       <IonContent className="ion-padding">
         <div className="view-container">
           <div className="success-container">
-            {isLoading || isError ? (
+            {isLoading || isError || !codeData ? (
               <div className="spinner-wrapper">
                 <IonSpinner name="crescent" />
               </div>

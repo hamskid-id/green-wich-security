@@ -31,7 +31,7 @@
   width: 100%;
   max-width: 400px;
   background: white;
-  padding: 32px 0px;
+  padding: 32px 20px;
   margin: 0 auto;
 }
 
@@ -80,7 +80,6 @@
 /* Result Section */
 .result-section {
   text-align: center;
-  padding: 0 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -285,10 +284,6 @@ ion-button.back-to-entry-button {
 
   .status-icon-svg {
     font-size: 40px;
-  }
-
-  .result-section {
-    padding: 0 16px;
   }
 
   .action-section {
