@@ -20,7 +20,7 @@ const MobileLayout: React.FC = () => {
         exact
       />
 
-      <Route path="/access-code/:code" component={AccessCodePage} />
+      <Route path="/access-code" component={AccessCodePage} />
 
       {/* Default redirect */}
       <Route

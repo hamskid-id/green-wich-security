@@ -48,8 +48,9 @@ const VerifyAccessCodePage: React.FC = () => {
 
   const handleValidateCode = async (): Promise<void> => {
     try {
-      const code = accessCode;
-      history.push(`/access-code/${code}`);
+      history.push(`/access-code`, {
+        code: accessCode,
+      });
     } catch (error: any) {
       // Navigate to failure result page
       history.push("/verification-result", {

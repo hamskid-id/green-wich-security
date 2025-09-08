@@ -18,14 +18,19 @@ import {
 import { person, calendar, time, clipboard } from "ionicons/icons";
 import CustomButton from "../../components/ui/customButton/CustomButton";
 import "./AccessCodePage.css";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { AccessCode } from "../../types";
 import { formatDate, formatTimeRemaining } from "../../utils/helpers";
 import { ApiResponse, useApi } from "../../hooks/useApi";
 
+interface LocationState {
+  code?: string;
+}
+
 const AccessCodePage: React.FC = () => {
   const history = useHistory();
-  const { code } = useParams<{ code: string }>();
+  const location = useLocation<LocationState>();
+  const code = location.state?.code ?? "";
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [isExpired, setIsExpired] = useState<boolean>(false);
@@ -35,9 +40,8 @@ const AccessCodePage: React.FC = () => {
 
   console.log("this is codes:", code);
 
-  // FIXED: Added null check for code
   const { data, isError, error, isLoading } = useGet<ApiResponse<AccessCode>>(
-    ["accessCode", code ?? ""],
+    ["accessCode", code],
     `/access-codes/get-by-code/${code}`,
     {
       enabled: !!code,
@@ -46,7 +50,6 @@ const AccessCodePage: React.FC = () => {
 
   const codeData = data?.data;
 
-  // FIXED: Added null check for codeData?.id
   const { mutate: validateCode, isPending: isValidating } = usePost<void>(
     `/access-codes/validate/${codeData?.id}`
   );
