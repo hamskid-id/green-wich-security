@@ -44,7 +44,7 @@ const VerificationResultPage: React.FC = () => {
   }, [timestamp]);
 
   const handleBackToEntry = (): void => {
-    history.push("/");
+    history.replace("/verify-access-code");
   };
 
   return (
