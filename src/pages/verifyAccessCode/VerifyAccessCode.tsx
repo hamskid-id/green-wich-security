@@ -46,7 +46,7 @@ const VerifyAccessCodePage: React.FC = () => {
     history.replace("/login");
   };
 
-  const handleValidateCode = async (): Promise<void> => {
+  const handleValidateCode = async (accessCode: string): Promise<void> => {
     try {
       history.push(`/access-code`, {
         code: accessCode,
@@ -150,7 +150,6 @@ const VerifyAccessCodePage: React.FC = () => {
     // Extract access code from QR data
     // Assuming QR contains just the access code or you need to parse it
     const extractedCode = extractAccessCodeFromQR(qrData);
-
     if (extractedCode) {
       setAccessCode(extractedCode);
       setToastMessage("QR Code scanned successfully!");
@@ -158,7 +157,7 @@ const VerifyAccessCodePage: React.FC = () => {
 
       // Auto-validate after successful scan
       setTimeout(() => {
-        handleValidateCode();
+        handleValidateCode(extractedCode);
       }, 1000);
     } else {
       setToastMessage("Invalid QR code format");
@@ -245,7 +244,7 @@ const VerifyAccessCodePage: React.FC = () => {
               <CustomButton
                 loading={false}
                 disabled={!accessCode}
-                onClick={handleValidateCode}
+                onClick={() => handleValidateCode(accessCode)}
               >
                 Validate Code
               </CustomButton>

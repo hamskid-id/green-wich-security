@@ -38,8 +38,6 @@ const AccessCodePage: React.FC = () => {
   // FIXED: Single useParams call
   const { useGet, usePost } = useApi();
 
-  console.log("this is codes:", code);
-
   const { data, isError, error, isLoading } = useGet<ApiResponse<AccessCode>>(
     ["accessCode", code],
     `/access-codes/get-by-code/${code}`,
@@ -88,7 +86,6 @@ const AccessCodePage: React.FC = () => {
 
   useEffect(() => {
     if (isError && error) {
-      console.log(error);
       history.push("/verification-result", {
         success: false,
         error: error?.response?.data?.message || error?.message,
@@ -229,7 +226,15 @@ const AccessCodePage: React.FC = () => {
                       </p>
                     </IonLabel>
                   </IonItem>
-                  {codeData?.multiple_persons && (
+                  {codeData?.status && (
+                    <IonItem className="summary-item" lines="none">
+                      <IonLabel>
+                        <h4>Status</h4>
+                        <p>{codeData?.status}</p>
+                      </IonLabel>
+                    </IonItem>
+                  )}
+                  {codeData?.visitor_count && (
                     <IonItem className="summary-item" lines="none">
                       <IonLabel>
                         <h4>Vistors Count</h4>
