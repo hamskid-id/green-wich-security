@@ -44,7 +44,7 @@ const VerificationResultPage: React.FC = () => {
   }, [timestamp]);
 
   const handleBackToEntry = (): void => {
-    history.replace("/verify-access-code");
+    window.location.replace("/verify-access-code");
   };
 
   return (
@@ -76,7 +76,10 @@ const VerificationResultPage: React.FC = () => {
 
               <div className="result-info">
                 <h2 className="verification-result-visitor-name">
-                  {visitorName} Checked In {success ? "Successfully" : "Failed"}
+                  {success
+                    ? `${visitorName} Checked In Successfully`
+                    : "Check Failed"}
+                  `
                 </h2>
                 <p className="timestamp">
                   {new Date(currentTime)?.toUTCString()}

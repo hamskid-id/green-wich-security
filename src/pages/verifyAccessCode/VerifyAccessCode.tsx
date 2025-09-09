@@ -154,7 +154,6 @@ const VerifyAccessCodePage: React.FC = () => {
   const handleQRCodeDetected = (qrData: string): void => {
     stopCamera();
     setIsQRModalOpen(false);
-    
     const extractedCode = extractAccessCodeFromQR(qrData);
     if (extractedCode) {
       setAccessCode(extractedCode);
@@ -204,7 +203,7 @@ const VerifyAccessCodePage: React.FC = () => {
             aria-label="Go back to Home"
           >
             <img
-              src="/guard-icon.png"
+              src="/guard.svg"
               alt="Greenwich Garden Estates Logo"
               className="guard-icon"
             />
