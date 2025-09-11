@@ -138,11 +138,12 @@ export const useAuthStore = create<AuthState>()(
       resetPassword: async (
         code: string,
         newPassword: string,
+        confirmPassword:string,
         contactInfo: string
       ): Promise<void> => {
         set({ isLoading: true, error: null });
         try {
-          await authService.resetPassword(code, newPassword, contactInfo);
+          await authService.resetPassword(code, newPassword,confirmPassword, contactInfo);
           set({ isLoading: false });
         } catch (error: any) {
           set({

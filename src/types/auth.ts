@@ -80,6 +80,7 @@ export interface AuthState {
   resetPassword: (
     code: string,
     newPassword: string,
+    confirmPassword: string,
     contactInfo: string
   ) => Promise<void>;
 }

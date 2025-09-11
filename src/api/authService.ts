@@ -45,6 +45,7 @@ export const authService = {
   resetPassword: async (
     code: string,
     newPassword: string,
+    confirmPassword:string,
     contactInfo: string
   ): Promise<void> => {
     const isEmail = contactInfo.includes("@");
@@ -53,7 +54,7 @@ export const authService = {
           email: contactInfo,
           code: parseInt(code),
           password: newPassword,
-          password_confirmation: newPassword,
+          password_confirmation: confirmPassword,
         }
       : {
           phoneNumber: contactInfo,

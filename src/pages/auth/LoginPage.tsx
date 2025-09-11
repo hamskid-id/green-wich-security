@@ -96,7 +96,7 @@ const LoginPage: React.FC = () => {
             <div className="heads-up">
               <div className="warning-row">
                 <img
-                  src="/security-reminder.png"
+                  src="/reminder.svg"
                   alt="Greenwich Garden Estates Logo"
                   className="security-image"
                 />
@@ -106,7 +106,7 @@ const LoginPage: React.FC = () => {
               </div>
               <div className="warning-row">
                 <img
-                  src="/check.png"
+                  src="/check.svg"
                   alt="Greenwich Garden Estates Logo"
                   className="logo-image"
                 />
@@ -116,7 +116,7 @@ const LoginPage: React.FC = () => {
               </div>
               <div className="warning-row">
                 <img
-                  src="/check.png"
+                  src="/check.svg"
                   alt="Greenwich Garden Estates Logo"
                   className="logo-image"
                 />
@@ -126,7 +126,7 @@ const LoginPage: React.FC = () => {
               </div>
               <div className="warning-row">
                 <img
-                  src="/check.png"
+                  src="/check.svg"
                   alt="Greenwich Garden Estates Logo"
                   className="logo-image"
                 />

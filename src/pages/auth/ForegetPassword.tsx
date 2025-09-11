@@ -77,9 +77,9 @@ const ForgotPasswordPage: React.FC = () => {
     }
 
     try {
-      await verifyResetCode(verificationCode, contactInfo);
+      // await verifyResetCode(verificationCode, contactInfo);
       setStep(3);
-      showToastMessage("Code verified successfully", "toast-success");
+      // showToastMessage("Code verified successfully", "toast-success");
     } catch (error: any) {
       showToastMessage(
         error?.response?.data?.message || "Invalid verification code",
@@ -105,7 +105,7 @@ const ForgotPasswordPage: React.FC = () => {
     }
 
     try {
-      await resetPassword(verificationCode, newPassword, contactInfo);
+      await resetPassword(verificationCode, newPassword,confirmPassword, contactInfo);
       showToastMessage(
         "Password reset successfully! Redirecting to login...",
         "toast-success"
@@ -258,6 +258,7 @@ const ForgotPasswordPage: React.FC = () => {
                 <CustomInput
                   icon={lockClosed}
                   label="New Password"
+                  id="New Password"
                   type="password"
                   value={newPassword}
                   onIonInput={(e) => setNewPassword(e.detail.value!)}
@@ -267,6 +268,7 @@ const ForgotPasswordPage: React.FC = () => {
                 <CustomInput
                   icon={lockClosed}
                   label="Confirm Password"
+                  id="Confirm Password"
                   type="password"
                   value={confirmPassword}
                   onIonInput={(e) => setConfirmPassword(e.detail.value!)}

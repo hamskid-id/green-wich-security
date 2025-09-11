@@ -23,6 +23,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 import MobileLayout from "./components/layout/AppLayout";
 import { Spinner } from "./components/ui/spinner";
+import SafeAreaView from "./components/layout/SafeAreaView";
 
 setupIonicReact();
 
@@ -55,10 +56,12 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <QueryClientProvider client={queryClient}>
-        <IonReactRouter>
-          {isAuthenticated ? <MobileLayout /> : <AuthLayout />}
-        </IonReactRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <SafeAreaView>
+          <IonReactRouter>
+            {isAuthenticated ? <MobileLayout /> : <AuthLayout />}
+          </IonReactRouter>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </SafeAreaView>
       </QueryClientProvider>
     </IonApp>
   );
