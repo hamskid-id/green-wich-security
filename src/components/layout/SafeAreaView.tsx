@@ -8,10 +8,10 @@ const SafeAreaView: React.FC<SafeAreaViewProps> = ({ children }) => {
   return (
     <div
       style={{
-        paddingTop: "var(--ion-safe-area-top)",
-        paddingBottom: "var(--ion-safe-area-bottom)",
-        paddingLeft: "var(--ion-safe-area-left)",
-        paddingRight: "var(--ion-safe-area-right)",
+        paddingTop: "env(safe-area-inset-top)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)",
         height: "100%",
         display: "flex",
         flexDirection: "column",

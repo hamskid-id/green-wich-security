@@ -10,7 +10,7 @@ const AuthLayout = () => {
   return (
     <IonRouterOutlet>
       <Route path="/login" component={LoginPage} exact />
-      <Route path="/register" component={RegisterPage} exact />
+      {/* <Route path="/register" component={RegisterPage} exact /> */}
       <Route path="/forgot-password" component={ForgotPasswordPage} exact />
       <Route path="/verify-email" component={VerifyEmailPage} exact />
       <Route path="/account-in-progress" component={PendingStatusPage} exact />
